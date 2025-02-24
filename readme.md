@@ -25,6 +25,6 @@ Os grupos representam uma software house desenvolvendo um sistema web para uma e
 
 ## Linguagens utilizadas
 
-Para o frontend será utilizando o `javascript`: Equipe: Murilo e João
-Para o backend será utilizado o `C#`: Equipe: Camila e Igor
-Para o banco de dados será utilizado o `SQL SERVER`: Equipe: Kayque e Rodrigo
+Para o frontend será utilizando o `javascript`:
+Para o backend será utilizado o `C#`: 
+Para o banco de dados será utilizado o `SQL SERVER`: 

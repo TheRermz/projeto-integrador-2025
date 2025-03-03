@@ -1,23 +1,38 @@
-﻿using api_mrp.Models;
+﻿using api_mrp.Data;
+using api_mrp.Models;
 using api_mrp.Repositorios.Interface;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace api_mrp.Repositorios
 {
     public class UserRepostorio : IUserRepostorio
     {
-        public Task<UserModel> AddUser(UserModel user)
+
+        private readonly UserDBContext _dbContext;
+
+        public UserRepostorio(UserDBContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
 
-        public Task<List<UserModel>> GetAllUsers(UserModel user)
+        public async Task<UserModel> AddUser(UserModel user)
         {
-            throw new NotImplementedException();
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return user;
         }
+
+        public async Task<List<UserModel>> GetAllUsers()
+        {
+            return await _dbContext.Users.ToListAsync();
+        }
+
+
 
         public Task<UserModel> GetUser(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

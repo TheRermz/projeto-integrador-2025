@@ -1,4 +1,9 @@
 
+using api_mrp.Data;
+using api_mrp.Repositorios;
+using api_mrp.Repositorios.Interface;
+using Microsoft.EntityFrameworkCore;
+
 namespace api_mrp
 {
     public class Program
@@ -14,6 +19,23 @@ namespace api_mrp
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost", policy =>
+                {
+                    policy.WithOrigins("http://127.0.0.1:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
+            builder.Services.AddEntityFrameworkSqlServer()
+                .AddDbContext<UserDBContext>(
+                    option => option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
+                    );
+
+            builder.Services.AddScoped<IUserRepostorio, UserRepostorio>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -22,6 +44,8 @@ namespace api_mrp
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowLocalhost");
 
             app.UseHttpsRedirection();
 

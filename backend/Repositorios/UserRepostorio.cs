@@ -1,8 +1,11 @@
-﻿using api_mrp.Data;
+﻿using Microsoft.AspNetCore.Http;
+using api_mrp.Data;
 using api_mrp.Models;
 using api_mrp.Repositorios.Interface;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace api_mrp.Repositorios
 {
@@ -28,11 +31,28 @@ namespace api_mrp.Repositorios
             return await _dbContext.Users.ToListAsync();
         }
 
-
-
         public Task<UserModel> GetUser(int id)
         {
             return _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<UserModel> AuthenticUser(ValidationModel login)
+        {
+            var usuario = await _dbContext.Users.FirstOrDefaultAsync(u => u.matricula == login.matricula);
+
+            if (usuario == null)
+            {
+                throw new Exception($"Usuario ou Senha Incorretos");
+            }
+
+            if (usuario.senha != login.senha)
+            {
+                throw new Exception($"Usuario ou Senha Incorretos");
+            }
+
+            return usuario;
+
+        }
+
     }
 }

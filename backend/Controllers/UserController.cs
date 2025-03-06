@@ -1,4 +1,6 @@
-﻿using api_mrp.Models;
+﻿using System.ComponentModel;
+using api_mrp.Data;
+using api_mrp.Models;
 using api_mrp.Repositorios.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +12,11 @@ namespace api_mrp.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepostorio _userRepostorio;
-        public UserController(IUserRepostorio userRepostorio)
+        private readonly UserDBContext _dbContext;
+
+        public UserController(IUserRepostorio userRepostorio, UserDBContext dbContext)
         {
+            _dbContext = dbContext;
             _userRepostorio = userRepostorio;
         }
 
@@ -29,11 +34,19 @@ namespace api_mrp.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<ActionResult<UserModel>> AddUser([FromBody] UserModel userModel)
         {
             UserModel user = await _userRepostorio.AddUser(userModel);
             return Ok(user);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UserModel>> Login([Bind("matricula, senha")] ValidationModel login)
+        {
+            UserModel user = await _userRepostorio.AuthenticUser(login);
+            return Ok(new { message = "Login realizado com sucesso" });
+
         }
     }
 }

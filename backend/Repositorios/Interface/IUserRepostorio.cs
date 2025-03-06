@@ -7,5 +7,6 @@ namespace api_mrp.Repositorios.Interface
         Task<List<UserModel>> GetAllUsers();
         Task<UserModel> GetUser(int id);
         Task<UserModel> AddUser(UserModel user);
+        Task<UserModel> AuthenticUser(ValidationModel login);
     }
 }

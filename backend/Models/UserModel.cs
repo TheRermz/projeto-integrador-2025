@@ -14,6 +14,5 @@ namespace api_mrp.Models
         public UserStatus status { get; set; }
         public string senha { get; set; }
 
-
     }
 }

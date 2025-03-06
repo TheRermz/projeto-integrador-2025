@@ -3,6 +3,6 @@
     public enum UserStatus
     {
         disponivel  = 0,
-        indisponivel = 1,
+        indisponivel = 1
     }
 }

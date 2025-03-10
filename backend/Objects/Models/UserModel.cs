@@ -1,6 +1,6 @@
-﻿using api_mrp.Models.Enums;
+﻿using api_mrp.Dto.Enums;
 
-namespace api_mrp.Models
+namespace api_mrp.Objects.Models
 {
     public class UserModel
     {
@@ -10,7 +10,7 @@ namespace api_mrp.Models
         public string maquina { get; set; }
         public string cargo { get; set; }
         public string hierarquia { get; set; }
-        public string setor {  get; set; }
+        public string setor { get; set; }
         public UserStatus status { get; set; }
         public string senha { get; set; }
 

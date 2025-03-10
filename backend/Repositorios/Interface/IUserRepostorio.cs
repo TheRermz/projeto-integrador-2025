@@ -1,4 +1,4 @@
-﻿using api_mrp.Models;
+﻿using api_mrp.Objects.Models;
 
 namespace api_mrp.Repositorios.Interface
 {

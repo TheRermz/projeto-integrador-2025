@@ -1,4 +1,4 @@
-﻿namespace api_mrp.Models.Enums
+﻿namespace api_mrp.Dto.Enums
 {
     public enum UserStatus
     {

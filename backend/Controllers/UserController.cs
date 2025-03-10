@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using api_mrp.Data;
-using api_mrp.Models;
+using api_mrp.Objects.Models;
 using api_mrp.Repositorios.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

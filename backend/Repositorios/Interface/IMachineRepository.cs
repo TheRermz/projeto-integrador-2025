@@ -9,5 +9,6 @@ namespace api_mrp.Repositorios.Interface
         Task<MachinesModel> AddMachines(MachinesModel machines);
         Task<MachinesModel> DefineFunctions(MachinesModel machines);
         Task<bool> DeleteMachines(int id);
+        Task<List<MachinesModel>> GetAllMachines();
     }
 }

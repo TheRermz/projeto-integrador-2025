@@ -1,33 +1,53 @@
-﻿using api_mrp.Objects.Models;
+﻿using api_mrp.Data;
+using api_mrp.Objects.Models;
 using api_mrp.Repositorios.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace api_mrp.Repositorios
 {
     public class MachineRepository : IMachineRepository
     {
-        public Task<MachinesModel> AddMachines(MachinesModel machines)
+        private readonly UserDBContext _dbContext;
+
+        public MachineRepository(UserDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<MachinesModel> AddMachines(MachinesModel machines)
+        {
+            await _dbContext.Machines.AddAsync(machines);
+            await _dbContext.SaveChangesAsync();
+            return machines;
+        }
+
+        public async Task<MachinesModel> DefineFunctions(MachinesModel machines)
         {
             throw new NotImplementedException();
         }
 
-        public Task<MachinesModel> DefineFunctions(MachinesModel machines)
+        public async Task<bool> DeleteMachines(int id)
         {
-            throw new NotImplementedException();
+            MachinesModel machines = await GetMachines(id);
+            if (machines == null)
+            {
+                throw new Exception("Máquina não encontrada");
+            }
+
+            _dbContext.Machines.Remove(machines);
+
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
-        public Task<bool> DeleteMachines(int id)
+        public async Task<List<MachinesModel>> GetAllMachines()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Machines.ToListAsync();
         }
 
-        public Task<List<MachinesModel>> GetAllMachineModels()
+        public async Task<MachinesModel> GetMachines(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<MachinesModel> GetMachines(int id)
-        {
-            throw new NotImplementedException();
+            return await _dbContext.Machines.FirstOrDefaultAsync(x => x.id == id);
         }
     }
 }

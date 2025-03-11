@@ -20,14 +20,14 @@ namespace api_mrp.Controllers
             _userRepostorio = userRepostorio;
         }
 
-        [HttpGet]
+        [HttpGet("usuarios")]
         public async Task<ActionResult<List<UserModel>>> GetAllUsers()
         {
             List<UserModel> users = await _userRepostorio.GetAllUsers();
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("usuarios/{id}")]
         public async Task<ActionResult<UserModel>> GetUserById(int id)
         {
             UserModel user = await _userRepostorio.GetUser(id);

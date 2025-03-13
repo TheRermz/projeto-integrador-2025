@@ -11,7 +11,6 @@ namespace api_mrp.Data
         }
 
         public DbSet<UserModel> Users { get; set; }
-
         public DbSet<MachinesModel> Machines { get; set; }
     }
 }

@@ -35,6 +35,7 @@ namespace api_mrp
                     );
 
             builder.Services.AddScoped<IUserRepostorio, UserRepostorio>();
+            builder.Services.AddScoped<IMachineRepository, MachineRepository>();
 
             var app = builder.Build();
 

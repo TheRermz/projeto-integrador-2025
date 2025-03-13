@@ -25,4 +25,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Data\Map\MachineMap.cs" />
+  </ItemGroup>
+
 </Project>

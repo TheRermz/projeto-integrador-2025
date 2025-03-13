@@ -16,6 +16,13 @@ namespace api_mrp.Repositorios
 
         public async Task<MachinesModel> AddMachines(MachinesModel machines)
         {
+            var userId = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == machines.idUser);
+
+            if (userId == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
             await _dbContext.Machines.AddAsync(machines);
             await _dbContext.SaveChangesAsync();
             return machines;

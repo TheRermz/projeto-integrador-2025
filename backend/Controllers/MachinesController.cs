@@ -12,7 +12,14 @@ namespace api_mrp.Controllers
 
         public MachinesController(IMachineRepository machineRepository)
         {
-            _machineRepository = _machineRepository;
+            _machineRepository = machineRepository;
+        }
+
+        [HttpPost("machines")]
+        public async Task<ActionResult<MachinesModel>> AddMachines([FromBody] MachinesModel machines)
+        {
+            MachinesModel machine = await _machineRepository.AddMachines(machines);
+            return Ok(machine);
         }
 
         [HttpGet("machines")]

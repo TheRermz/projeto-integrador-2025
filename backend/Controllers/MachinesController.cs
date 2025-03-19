@@ -42,5 +42,12 @@ namespace api_mrp.Controllers
             bool deletado = await _machineRepository.DeleteMachines(id);
             return Ok(deletado);
         }
+
+        [HttpPut("machines/define/{id}")]
+        public async Task<ActionResult<MachinesModel>> DefineFunctions([FromBody] MachinesModel machines)
+        {
+            MachinesModel machine = await _machineRepository.DefineFunctions(machines);
+            return Ok(machine);
+        }
     }
 }

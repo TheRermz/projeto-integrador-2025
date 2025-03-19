@@ -9,9 +9,9 @@ namespace api_mrp.Repositorios
     {
         private readonly UserDBContext _dbContext;
 
-        public MachineRepository(UserDBContext dbContext)
+        public MachineRepository(UserDBContext context)
         {
-            _dbContext = dbContext;
+            _dbContext = context;
         }
 
         public async Task<MachinesModel> AddMachines(MachinesModel machines)
@@ -30,7 +30,27 @@ namespace api_mrp.Repositorios
 
         public async Task<MachinesModel> DefineFunctions(MachinesModel machines)
         {
-            throw new NotImplementedException();
+            MachinesModel machine = await GetMachines(machines.id);
+
+            if (machine == null)
+            {
+                throw new Exception("Máquina não encontrada");
+            }
+
+            var userId = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == machines.idUser);
+
+            if (userId == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            machine.idUser = machines.idUser;
+            machine.status = machines.status;
+
+            _dbContext.Machines.Update(machine);
+            await _dbContext.SaveChangesAsync();
+
+            return machine;
         }
 
         public async Task<bool> DeleteMachines(int id)
@@ -54,7 +74,12 @@ namespace api_mrp.Repositorios
 
         public async Task<MachinesModel> GetMachines(int id)
         {
-            return await _dbContext.Machines.FirstOrDefaultAsync(x => x.id == id);
+            var machine = await _dbContext.Machines.FirstOrDefaultAsync(x => x.id == id);
+            if (machine == null)
+            {
+                throw new Exception("Máquina não encontrada");
+            }
+            return machine;
         }
     }
 }

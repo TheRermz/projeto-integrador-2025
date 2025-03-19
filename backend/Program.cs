@@ -34,8 +34,12 @@ namespace api_mrp
                     option => option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
                     );
 
+
+            // Repositories
             builder.Services.AddScoped<IUserRepostorio, UserRepostorio>();
             builder.Services.AddScoped<IMachineRepository, MachineRepository>();
+            builder.Services.AddScoped<IProductsRepositorio, ProductsRepositorio>();
+            builder.Services.AddScoped<IInsumosRepository, InsumosRepository>();
 
             var app = builder.Build();
 

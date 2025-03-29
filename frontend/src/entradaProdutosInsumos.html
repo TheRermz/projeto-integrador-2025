@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLOAD - Entrada de Produtos/Insumos</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #003366;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #333399;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #666;
+        }
+        
+        .header-title {
+            font-size: 12px;
+            color: #ccc;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Navigation Styles */
+        .nav {
+            background-color: #333399;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #666;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+        }
+        
+        .nav-link {
+            cursor: pointer;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box input {
+            margin-left: 4px;
+            padding: 2px 8px;
+            height: 20px;
+            width: 96px;
+            font-size: 14px;
+        }
+        
+        /* Main Content Styles */
+        .main {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .page-title-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-button {
+            margin-right: 8px;
+            padding: 4px;
+            background-color: #0066cc;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-button:hover {
+            background-color: #0077dd;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .page-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        /* Content Layout */
+        .content-layout {
+            display: flex;
+            flex: 1;
+            gap: 16px;
+            overflow: hidden;
+        }
+        
+        /* Form Container */
+        .form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        /* Form Section */
+        .form-section {
+            background-color: #002244;
+            border-radius: 4px;
+            border: 1px solid #004488;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background-color: #001a33;
+            padding: 8px 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #004488;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-content {
+            padding: 16px;
+        }
+        
+        /* Form Styles */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #004488;
+            background-color: #001a33;
+            color: white;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.25);
+        }
+        
+        .form-group input[type="date"] {
+            padding: 7px 8px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-group.form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        /* Radio Button Group */
+        .radio-group {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .radio-option input[type="radio"] {
+            width: auto;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-primary {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0077dd;
+        }
+        
+        .btn-secondary {
+            background-color: #003366;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #004488;
+        }
+        
+        .btn-danger {
+            background-color: #cc3333;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dd4444;
+        }
+        
+        /* Items Table */
+        .items-table-container {
+            overflow-x: auto;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .items-table th {
+            background-color: #001a33;
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #004488;
+        }
+        
+        .items-table td {
+            padding: 8px;
+            border-bottom: 1px solid #004488;
+        }
+        
+        .items-table tr:nth-child(even) {
+            background-color: #002a55;
+        }
+        
+        .items-table tr:hover {
+            background-color: #003366;
+        }
+        
+        .items-table .text-right {
+            text-align: right;
+        }
+        
+        .items-table .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .items-table .action-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+        
+        .items-table .action-btn:hover {
+            background-color: #0066cc;
+        }
+        
+        .items-table .action-btn.delete:hover {
+            background-color: #cc3333;
+        }
+        
+        /* Summary */
+        .summary {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+        
+        .summary-table {
+            width: 300px;
+            border-collapse: collapse;
+        }
+        
+        .summary-table td {
+            padding: 4px 8px;
+        }
+        
+        .summary-table .text-right {
+            text-align: right;
+        }
+        
+        .summary-table .total-row {
+            border-top: 1px solid #004488;
+            font-size: 18px;
+        }
+        
+        /* Product Search */
+        .product-search-container {
+            position: relative;
+        }
+        
+        .product-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #001a33;
+            border: 1px solid #004488;
+            border-radius: 0 0 4px 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+        
+        .product-search-item {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #004488;
+        }
+        
+        .product-search-item:hover {
+            background-color: #0066cc;
+        }
+        
+        .product-search-item .product-code {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        /* Preview Panel */
+        .preview-panel {
+            width: 0;
+            background-color: #002244;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: width 0.3s ease;
+            border: 1px solid #004488;
+        }
+        
+        .preview-panel.open {
+            width: 400px;
+        }
+        
+        .preview-header {
+            background-color: #001a33;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #004488;
+        }
+        
+        .preview-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .preview-content {
+            padding: 16px;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+        
+        .preview-section {
+            margin-bottom: 16px;
+        }
+        
+        .preview-section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #004488;
+            padding-bottom: 4px;
+        }
+        
+        .preview-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .preview-label {
+            width: 120px;
+            color: #aaa;
+        }
+        
+        .preview-value {
+            flex: 1;
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        /* Status Messages */
+        .status-message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-success {
+            background-color: rgba(102, 204, 102, 0.2);
+            border: 1px solid #66cc66;
+            color: #66cc66;
+        }
+        
+        .status-error {
+            background-color: rgba(204, 51, 51, 0.2);
+            border: 1px solid #cc3333;
+            color: #cc3333;
+        }
+        
+        .status-warning {
+            background-color: rgba(255, 204, 0, 0.2);
+            border: 1px solid #ffcc00;
+            color: #ffcc00;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background-color: #003366;
+            padding: 4px 16px;
+            font-size: 12px;
+            border-top: 1px solid #666;
+        }
+        
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .footer-info {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .footer-info-item b {
+            font-weight: bold;
+        }
+        
+        .footer-version {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .system-info {
+            text-align: right;
+        }
+        
+        .footer-links {
+            margin-top: 4px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .footer-link {
+            cursor: pointer;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .separator {
+            color: #666;
+        }
+        
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+        
+        .icon-arrow-left::before {
+            content: "←";
+        }
+        
+        .icon-plus::before {
+            content: "+";
+        }
+        
+        .icon-edit::before {
+            content: "✎";
+        }
+        
+        .icon-trash::before {
+            content: "🗑️";
+            font-size: 12px;
+        }
+        
+        .icon-check::before {
+            content: "✓";
+        }
+        
+        .icon-close::before {
+            content: "×";
+        }
+        
+        .icon-save::before {
+            content: "💾";
+            font-size: 12px;
+        }
+        
+        .icon-preview::before {
+            content: "👁️";
+            font-size: 12px;
+        }
+        
+        .icon-warning::before {
+            content: "⚠️";
+            font-size: 12px;
+        }
+        
+        .icon-success::before {
+            content: "✅";
+            font-size: 12px;
+        }
+        
+        .icon-error::before {
+            content: "❌";
+            font-size: 12px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content-layout {
+                flex-direction: column;
+            }
+            
+            .preview-panel {
+                width: 100%;
+                height: 0;
+                transition: height 0.3s ease;
+            }
+            
+            .preview-panel.open {
+                width: 100%;
+                height: 500px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">KLOAD - Versão: 0.1 - Código Cliente - ESCRITÓRIO</div>
+        <div class="window-controls">
+            <button class="window-button">-</button>
+            <button class="window-button">□</button>
+            <button class="window-button">×</button>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="logo">KLOAD</div>
+        <div class="nav-links">
+            <div class="nav-link">Cadastros</div>
+            <div class="nav-link">Movimento</div>
+            <div class="nav-link">Relatórios</div>
+            <div class="nav-link">Controle</div>
+            <div class="nav-link">Inteligência</div>
+            <div class="nav-link">Configurações</div>
+            <div class="nav-link">Utilities</div>
+            <div class="nav-link">Sobre</div>
+            <div class="search-box">
+                <span>Pesquisar:</span>
+                <input type="text">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title-container">
+                <button class="back-button" onclick="window.history.back()">
+                    <span class="icon icon-arrow-left"></span>
+                </button>
+                <h1 class="page-title">Entrada de Produtos/Insumos</h1>
+            </div>
+            <div class="page-logo">KLOAD</div>
+        </div>
+
+        <!-- Status Message (initially hidden) -->
+        <div id="status-message" style="display: none;"></div>
+
+        <!-- Content Layout -->
+        <div class="content-layout">
+            <!-- Form Container -->
+            <div class="form-container">
+                <!-- Document Information Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div>Informações do Documento</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="entry-type">Tipo de Entrada</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="entry-type-purchase" name="entry-type" value="compra" checked>
+                                        <label for="entry-type-purchase">Compra</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="entry-type-production" name="entry-type" value="producao">
+                                        <label for="entry-type-production">Produção</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="entry-type-return" name="entry-type" value="devolucao">
+                                        <label for="entry-type-return">Devolução</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="entry-type-adjustment" name="entry-type" value="ajuste">
+                                        <label for="entry-type-adjustment">Ajuste</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="document-number">Número do Documento</label>
+                                <input type="text" id="document-number" placeholder="Ex: NF 12345">
+                            </div>
+                            <div class="form-group">
+                                <label for="document-date">Data do Documento</label>
+                                <input type="date" id="document-date" value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="entry-date">Data de Entrada</label>
+                                <input type="date" id="entry-date" value="">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row supplier-fields">
+                            <div class="form-group">
+                                <label for="supplier">Fornecedor</label>
+                                <select id="supplier">
+                                    <option value="">Selecione um fornecedor</option>
+                                    <option value="Fornecedor A">Fornecedor A</option>
+                                    <option value="Fornecedor B">Fornecedor B</option>
+                                    <option value="Fornecedor C">Fornecedor C</option>
+                                    <option value="Fornecedor D">Fornecedor D</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment-terms">Condição de Pagamento</label>
+                                <select id="payment-terms">
+                                    <option value="">Selecione</option>
+                                    <option value="À Vista">À Vista</option>
+                                    <option value="30 dias">30 dias</option>
+                                    <option value="30/60 dias">30/60 dias</option>
+                                    <option value="30/60/90 dias">30/60/90 dias</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="notes">Observações</label>
+                                <textarea id="notes" placeholder="Observações adicionais sobre esta entrada"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Items Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div>Itens</div>
+                        <button class="btn btn-primary" id="add-item-btn">
+                            <span class="icon icon-plus"></span>
+                            Adicionar Item
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <!-- Add Item Form (initially hidden) -->
+                        <div id="add-item-form" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group product-search-container">
+                                    <label for="product-search">Produto</label>
+                                    <input type="text" id="product-search" placeholder="Digite o código ou nome do produto">
+                                    <div class="product-search-results" id="product-search-results" style="display: none;"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-category">Categoria</label>
+                                    <select id="product-category" disabled>
+                                        <option value="">Selecione um produto</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="product-quantity">Quantidade</label>
+                                    <input type="number" id="product-quantity" min="0" step="0.01" value="1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-unit">Unidade</label>
+                                    <input type="text" id="product-unit" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-price">Preço Unitário</label>
+                                    <input type="number" id="product-price" min="0" step="0.01" value="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-total">Total</label>
+                                    <input type="text" id="product-total" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group form-actions">
+                                    <button class="btn btn-secondary" id="cancel-item-btn">Cancelar</button>
+                                    <button class="btn btn-primary" id="confirm-item-btn">
+                                        <span class="icon icon-check"></span>
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Items Table -->
+                        <div class="items-table-container">
+                            <table class="items-table" id="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Produto</th>
+                                        <th>Categoria</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Un</th>
+                                        <th class="text-right">Preço Unit.</th>
+                                        <th class="text-right">Total</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="items-tbody">
+                                    <tr id="empty-row">
+                                        <td colspan="8" style="text-align: center;">Nenhum item adicionado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Summary -->
+                        <div class="summary">
+                            <table class="summary-table">
+                                <tr>
+                                    <td>Subtotal:</td>
+                                    <td class="text-right" id="subtotal">R$ 0,00</td>
+                                </tr>
+                                <tr>
+                                    <td>Impostos:</td>
+                                    <td class="text-right" id="taxes">R$ 0,00</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Total:</td>
+                                    <td class="text-right" id="total">R$ 0,00</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="form-section">
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group form-actions">
+                                <button class="btn btn-secondary" id="clear-form-btn">Limpar</button>
+                                <button class="btn btn-primary" id="preview-btn">
+                                    <span class="icon icon-preview"></span>
+                                    Visualizar
+                                </button>
+                                <button class="btn btn-primary" id="save-btn">
+                                    <span class="icon icon-save"></span>
+                                    Salvar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div class="preview-panel" id="preview-panel">
+                <div class="preview-header">
+                    <div class="preview-title">Visualização da Entrada</div>
+                    <button class="close-button" id="close-preview-button">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="preview-content" id="preview-content">
+                    <!-- Preview content will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-info">
+                <div class="footer-info-item">
+                </div>
+                <div class="footer-info-item">
+                </div>
+                <div class="footer-info-item">
+                    <b>Chat:</b> 24hs ativo!
+                </div>
+                <div class="footer-info-item">
+                    <b>E-mail:</b> atendimento@kloadsystem.com.br
+                </div>
+            </div>
+            <div class="footer-version">
+                <div>
+                    <b>Novidades da Versão 3.41</b>
+                </div>  
+            </div>
+        </div>
+        <div class="footer-links">
+            <div class="footer-link">Sair</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Perfil do Computador</div>
+            <span class="separator">|</span>
+            <div class="footer-link">PC</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Usuário</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Servidor</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Parâmetros</div>
+        </div>
+    </footer>
+
+    <script>
+        // Mock data for products
+        const products = [
+            {
+                id: 1,
+                code: "MP001",
+                name: "Polietileno de Alta Densidade",
+                category: "Matéria-Prima",
+                price: 12.50,
+                unit: "KG",
+                supplier: "Fornecedor A"
+            },
+            {
+                id: 2,
+                code: "MP002",
+                name: "Pigmento Azul",
+                category: "Matéria-Prima",
+                price: 45.80,
+                unit: "KG",
+                supplier: "Fornecedor B"
+            },
+            {
+                id: 3,
+                code: "EM001",
+                name: "Caixa de Papelão 30x20x15",
+                category: "Embalagem",
+                price: 3.25,
+                unit: "UN",
+                supplier: "Fornecedor C"
+            },
+            {
+                id: 4,
+                code: "EM002",
+                name: "Filme Stretch 500mm",
+                category: "Embalagem",
+                price: 85.00,
+                unit: "RL",
+                supplier: "Fornecedor C"
+            },
+            {
+                id: 5,
+                code: "PA001",
+                name: "Balde Plástico 20L",
+                category: "Produto Acabado",
+                price: 18.90,
+                unit: "UN",
+                supplier: "Produção Interna"
+            },
+            {
+                id: 6,
+                code: "PA002",
+                name: "Garrafa PET 2L",
+                category: "Produto Acabado",
+                price: 1.20,
+                unit: "UN",
+                supplier: "Produção Interna"
+            },
+            {
+                id: 7,
+                code: "MC001",
+                name: "Luva de Proteção",
+                category: "Material de Consumo",
+                price: 12.50,
+                unit: "PAR",
+                supplier: "Fornecedor D"
+            },
+            {
+                id: 8,
+                code: "MC002",
+                name: "Óleo Lubrificante",
+                category: "Material de Consumo",
+                price: 45.80,
+                unit: "L",
+                supplier: "Fornecedor D"
+            },
+            {
+                id: 9,
+                code: "EQ001",
+                name: "Balança Digital 30kg",
+                category: "Equipamento",
+                price: 850.00,
+                unit: "UN",
+                supplier: "Fornecedor B"
+            },
+            {
+                id: 10,
+                code: "EQ002",
+                name: "Empilhadeira Manual",
+                category: "Equipamento",
+                price: 2500.00,
+                unit: "UN",
+                supplier: "Fornecedor A"
+            }
+        ];
+
+        // DOM elements
+        const addItemBtn = document.getElementById('add-item-btn');
+        const addItemForm = document.getElementById('add-item-form');
+        const cancelItemBtn = document.getElementById('cancel-item-btn');
+        const confirmItemBtn = document.getElementById('confirm-item-btn');
+        const productSearch = document.getElementById('product-search');
+        const productSearchResults = document.getElementById('product-search-results');
+        const productCategory = document.getElementById('product-category');
+        const productQuantity = document.getElementById('product-quantity');
+        const productUnit = document.getElementById('product-unit');
+        const productPrice = document.getElementById('product-price');
+        const productTotal = document.getElementById('product-total');
+        const itemsTable = document.getElementById('items-table');
+        const itemsTbody = document.getElementById('items-tbody');
+        const emptyRow = document.getElementById('empty-row');
+        const subtotalElement = document.getElementById('subtotal');
+        const taxesElement = document.getElementById('taxes');
+        const totalElement = document.getElementById('total');
+        const clearFormBtn = document.getElementById('clear-form-btn');
+        const previewBtn = document.getElementById('preview-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const previewPanel = document.getElementById('preview-panel');
+        const closePreviewButton = document.getElementById('close-preview-button');
+        const previewContent = document.getElementById('preview-content');
+        const statusMessage = document.getElementById('status-message');
+        const entryTypeRadios = document.querySelectorAll('input[name="entry-type"]');
+        const supplierFields = document.querySelector('.supplier-fields');
+        const documentNumber = document.getElementById('document-number');
+        const documentDate = document.getElementById('document-date');
+        const entryDate = document.getElementById('entry-date');
+        const supplier = document.getElementById('supplier');
+        const paymentTerms = document.getElementById('payment-terms');
+        const notes = document.getElementById('notes');
+
+        // Set default dates
+        const today = new Date().toISOString().split('T')[0];
+        documentDate.value = today;
+        entryDate.value = today;
+
+        // Items array
+        let items = [];
+        let selectedProduct = null;
+        let editingItemIndex = -1;
+
+        // Format currency
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Calculate item total
+        function calculateItemTotal() {
+            const quantity = parseFloat(productQuantity.value) || 0;
+            const price = parseFloat(productPrice.value) || 0;
+            const total = quantity * price;
+            productTotal.value = formatCurrency(total);
+            return total;
+        }
+
+        // Calculate order totals
+        function calculateOrderTotals() {
+            const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+            const taxRate = 0.12; // 12% tax rate for example
+            const taxes = subtotal * taxRate;
+            const total = subtotal + taxes;
+            
+            subtotalElement.textContent = formatCurrency(subtotal);
+            taxesElement.textContent = formatCurrency(taxes);
+            totalElement.textContent = formatCurrency(total);
+            
+            return { subtotal, taxes, total };
+        }
+
+        // Render items table
+        function renderItemsTable() {
+            // Clear table
+            while (itemsTbody.firstChild) {
+                itemsTbody.removeChild(itemsTbody.firstChild);
+            }
+            
+            // Show empty row if no items
+            if (items.length === 0) {
+                itemsTbody.appendChild(emptyRow);
+                return;
+            }
+            
+            // Add items to table
+            items.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${item.code}</td>
+                    <td>${item.name}</td>
+                    <td>${item.category}</td>
+                    <td class="text-right">${item.quantity.toLocaleString('pt-BR')}</td>
+                    <td>${item.unit}</td>
+                    <td class="text-right">${formatCurrency(item.price)}</td>
+                    <td class="text-right">${formatCurrency(item.total)}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="action-btn edit" title="Editar" data-index="${index}">
+                                <span class="icon icon-edit"></span>
+                            </button>
+                            <button class="action-btn delete" title="Excluir" data-index="${index}">
+                                <span class="icon icon-trash"></span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                itemsTbody.appendChild(row);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            const editButtons = itemsTbody.querySelectorAll('.edit');
+            const deleteButtons = itemsTbody.querySelectorAll('.delete');
+            
+            editButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.dataset.index);
+                    editItem(index);
+                });
+            });
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.dataset.index);
+                    deleteItem(index);
+                });
+            });
+            
+            // Calculate totals
+            calculateOrderTotals();
+        }
+
+        // Add item to order
+        function addItem() {
+            if (!selectedProduct) {
+                showStatusMessage('Selecione um produto válido.', 'error');
+                return;
+            }
+            
+            const quantity = parseFloat(productQuantity.value);
+            if (isNaN(quantity) || quantity <= 0) {
+                showStatusMessage('Quantidade inválida.', 'error');
+                return;
+            }
+            
+            const price = parseFloat(productPrice.value);
+            if (isNaN(price) || price < 0) {
+                showStatusMessage('Preço inválido.', 'error');
+                return;
+            }
+            
+            const total = quantity * price;
+            
+            const item = {
+                id: selectedProduct.id,
+                code: selectedProduct.code,
+                name: selectedProduct.name,
+                category: selectedProduct.category,
+                quantity: quantity,
+                unit: selectedProduct.unit,
+                price: price,
+                total: total
+            };
+            
+            if (editingItemIndex >= 0) {
+                // Update existing item
+                items[editingItemIndex] = item;
+                editingItemIndex = -1;
+            } else {
+                // Add new item
+                items.push(item);
+            }
+            
+            // Reset form
+            resetItemForm();
+            
+            // Hide form
+            addItemForm.style.display = 'none';
+            
+            // Render table
+            renderItemsTable();
+            
+            showStatusMessage('Item adicionado com sucesso.', 'success');
+        }
+
+        // Edit item
+        function editItem(index) {
+            const item = items[index];
+            editingItemIndex = index;
+            
+            // Find product
+            selectedProduct = products.find(p => p.id === item.id);
+            
+            // Fill form
+            productSearch.value = `${item.code} - ${item.name}`;
+            productCategory.value = item.category;
+            productQuantity.value = item.quantity;
+            productUnit.value = item.unit;
+            productPrice.value = item.price;
+            calculateItemTotal();
+            
+            // Show form
+            addItemForm.style.display = 'block';
+            
+            // Focus on quantity
+            productQuantity.focus();
+        }
+
+        // Delete item
+        function deleteItem(index) {
+            if (confirm('Tem certeza que deseja remover este item?')) {
+                items.splice(index, 1);
+                renderItemsTable();
+                showStatusMessage('Item removido com sucesso.', 'success');
+            }
+        }
+
+        // Reset item form
+        function resetItemForm() {
+            productSearch.value = '';
+            productCategory.value = '';
+            productQuantity.value = '1';
+            productUnit.value = '';
+            productPrice.value = '0.00';
+            productTotal.value = '';
+            selectedProduct = null;
+            editingItemIndex = -1;
+        }
+
+        // Show status message
+        function showStatusMessage(message, type) {
+            statusMessage.className = `status-message status-${type}`;
+            statusMessage.innerHTML = `
+                <span class="icon icon-${type}"></span>
+                ${message}
+            `;
+            statusMessage.style.display = 'flex';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Toggle supplier fields based on entry type
+        function toggleSupplierFields() {
+            const entryType = document.querySelector('input[name="entry-type"]:checked').value;
+            if (entryType === 'producao') {
+                supplierFields.style.display = 'none';
+            } else {
+                supplierFields.style.display = 'flex';
+            }
+        }
+
+        // Preview entry
+        function previewEntry() {
+            if (items.length === 0) {
+                showStatusMessage('Adicione pelo menos um item para visualizar.', 'warning');
+                return;
+            }
+            
+            const entryType = document.querySelector('input[name="entry-type"]:checked').value;
+            const entryTypeText = {
+                'compra': 'Compra',
+                'producao': 'Produção',
+                'devolucao': 'Devolução',
+                'ajuste': 'Ajuste'
+            }[entryType];
+            
+            const { subtotal, taxes, total } = calculateOrderTotals();
+            
+            previewContent.innerHTML = `
+                <div class="preview-section">
+                    <div class="preview-section-title">Informações do Documento</div>
+                    <div class="preview-row">
+                        <div class="preview-label">Tipo de Entrada:</div>
+                        <div class="preview-value">${entryTypeText}</div>
+                    </div>
+                    <div class="preview-row">
+                        <div class="preview-label">Documento:</div>
+                        <div class="preview-value">${documentNumber.value || 'N/A'}</div>
+                    </div>
+                    <div class="preview-row">
+                        <div class="preview-label">Data do Doc.:</div>
+                        <div class="preview-value">${formatDate(documentDate.value)}</div>
+                    </div>
+                    <div class="preview-row">
+                        <div class="preview-label">Data de Entrada:</div>
+                        <div class="preview-value">${formatDate(entryDate.value)}</div>
+                    </div>
+                    ${entryType !== 'producao' ? `
+                    <div class="preview-row">
+                        <div class="preview-label">Fornecedor:</div>
+                        <div class="preview-value">${supplier.value || 'N/A'}</div>
+                    </div>
+                    <div class="preview-row">
+                        <div class="preview-label">Pagamento:</div>
+                        <div class="preview-value">${paymentTerms.value || 'N/A'}</div>
+                    </div>
+                    ` : ''}
+                    ${notes.value ? `
+                    <div class="preview-row">
+                        <div class="preview-label">Observações:</div>
+                        <div class="preview-value">${notes.value}</div>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-section-title">Itens</div>
+                    <div class="items-table-container">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Produto</th>
+                                    <th class="text-right">Qtd</th>
+                                    <th>Un</th>
+                                    <th class="text-right">Preço</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${items.map(item => `
+                                <tr>
+                                    <td>${item.code}</td>
+                                    <td>${item.name}</td>
+                                    <td class="text-right">${item.quantity.toLocaleString('pt-BR')}</td>
+                                    <td>${item.unit}</td>
+                                    <td class="text-right">${formatCurrency(item.price)}</td>
+                                    <td class="text-right">${formatCurrency(item.total)}</td>
+                                </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-section-title">Resumo</div>
+                    <div class="preview-row">
+                        <div class="preview-label">Subtotal:</div>
+                        <div class="preview-value">${formatCurrency(subtotal)}</div>
+                    </div>
+                    <div class="preview-row">
+                        <div class="preview-label">Impostos:</div>
+                        <div class="preview-value">${formatCurrency(taxes)}</div>
+                    </div>
+                    <div class="preview-row" style="font-weight: bold;">
+                        <div class="preview-label">Total:</div>
+                        <div class="preview-value">${formatCurrency(total)}</div>
+                    </div>
+                </div>
+                
+                <div class="preview-actions">
+                    <button class="btn btn-primary" id="confirm-entry-btn">
+                        <span class="icon icon-check"></span>
+                        Confirmar Entrada
+                    </button>
+                </div>
+            `;
+            
+            // Show preview panel
+            previewPanel.classList.add('open');
+            
+            // Add event listener to confirm button
+            document.getElementById('confirm-entry-btn').addEventListener('click', saveEntry);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // Save entry
+        function saveEntry() {
+            // In a real application, this would send data to the server
+            // For this demo, we'll just show a success message and reset the form
+            
+            showStatusMessage('Entrada registrada com sucesso!', 'success');
+            
+            // Close preview panel
+            previewPanel.classList.remove('open');
+            
+            // Reset form
+            clearForm();
+        }
+
+        // Clear form
+        function clearForm() {
+            // Reset document info
+            document.querySelector('#entry-type-purchase').checked = true;
+            documentNumber.value = '';
+            documentDate.value = today;
+            entryDate.value = today;
+            supplier.value = '';
+            paymentTerms.value = '';
+            notes.value = '';
+            
+            // Reset items
+            items = [];
+            renderItemsTable();
+            
+            // Reset item form
+            resetItemForm();
+            addItemForm.style.display = 'none';
+            
+            // Show supplier fields
+            toggleSupplierFields();
+        }
+
+        // Search products
+        function searchProducts(query) {
+            if (!query) {
+                productSearchResults.style.display = 'none';
+                return;
+            }
+            
+            query = query.toLowerCase();
+            
+            const results = products.filter(product => 
+                product.code.toLowerCase().includes(query) || 
+                product.name.toLowerCase().includes(query)
+            );
+            
+            if (results.length === 0) {
+                productSearchResults.style.display = 'none';
+                return;
+            }
+            
+            productSearchResults.innerHTML = '';
+            
+            results.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'product-search-item';
+                item.innerHTML = `
+                    <div class="product-code">${product.code}</div>
+                    <div>${product.name}</div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    selectProduct(product);
+                });
+                
+                productSearchResults.appendChild(item);
+            });
+            
+            productSearchResults.style.display = 'block';
+        }
+
+        // Select product
+        function selectProduct(product) {
+            selectedProduct = product;
+            
+            productSearch.value = `${product.code} - ${product.name}`;
+            productCategory.value = product.category;
+            productUnit.value = product.unit;
+            productPrice.value = product.price;
+            
+            calculateItemTotal();
+            
+            productSearchResults.style.display = 'none';
+            
+            // Focus on quantity
+            productQuantity.focus();
+        }
+
+        // Event listeners
+        addItemBtn.addEventListener('click', () => {
+            resetItemForm();
+            addItemForm.style.display = 'block';
+            productSearch.focus();
+        });
+
+        cancelItemBtn.addEventListener('click', () => {
+            resetItemForm();
+            addItemForm.style.display = 'none';
+        });
+
+        confirmItemBtn.addEventListener('click', addItem);
+
+        productSearch.addEventListener('input', () => {
+            searchProducts(productSearch.value);
+        });
+
+        productSearch.addEventListener('focus', () => {
+            if (productSearch.value) {
+                searchProducts(productSearch.value);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!productSearchResults.contains(e.target) && e.target !== productSearch) {
+                productSearchResults.style.display = 'none';
+            }
+        });
+
+        productQuantity.addEventListener('input', calculateItemTotal);
+        productPrice.addEventListener('input', calculateItemTotal);
+
+        clearFormBtn.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja limpar o formulário? Todos os dados serão perdidos.')) {
+                clearForm();
+            }
+        });
+
+        previewBtn.addEventListener('click', previewEntry);
+        saveBtn.addEventListener('click', previewEntry);
+
+        closePreviewButton.addEventListener('click', () => {
+            previewPanel.classList.remove('open');
+        });
+
+        entryTypeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleSupplierFields);
+        });
+
+        // Initialize
+        toggleSupplierFields();
+        renderItemsTable();
+    </script>
+</body>
+</html>

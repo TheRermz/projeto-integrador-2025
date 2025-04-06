@@ -7,9 +7,9 @@ namespace api_mrp.Repositorios
 {
     public class InsumosRepository : IInsumosRepository
     {
-        private readonly UserDBContext _dbContext;
+        private readonly MrpDBContext _dbContext;
 
-        public InsumosRepository(UserDBContext context)
+        public InsumosRepository(MrpDBContext context)
         {
             _dbContext = context;
         }

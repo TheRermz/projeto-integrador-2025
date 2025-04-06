@@ -30,7 +30,7 @@ namespace api_mrp
             });
 
             builder.Services.AddEntityFrameworkSqlServer()
-                .AddDbContext<UserDBContext>(
+                .AddDbContext<MrpDBContext>(
                     option => option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
                     );
 

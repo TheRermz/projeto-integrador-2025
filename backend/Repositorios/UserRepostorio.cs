@@ -12,9 +12,9 @@ namespace api_mrp.Repositorios
     public class UserRepostorio : IUserRepostorio
     {
 
-        private readonly UserDBContext _dbContext;
+        private readonly MrpDBContext _dbContext;
 
-        public UserRepostorio(UserDBContext dbContext)
+        public UserRepostorio(MrpDBContext dbContext)
         {
             _dbContext = dbContext;
         }

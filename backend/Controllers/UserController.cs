@@ -12,9 +12,9 @@ namespace api_mrp.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepostorio _userRepostorio;
-        private readonly UserDBContext _dbContext;
+        private readonly MrpDBContext _dbContext;
 
-        public UserController(IUserRepostorio userRepostorio, UserDBContext dbContext)
+        public UserController(IUserRepostorio userRepostorio, MrpDBContext dbContext)
         {
             _dbContext = dbContext;
             _userRepostorio = userRepostorio;

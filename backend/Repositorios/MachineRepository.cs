@@ -7,9 +7,9 @@ namespace api_mrp.Repositorios
 {
     public class MachineRepository : IMachineRepository
     {
-        private readonly UserDBContext _dbContext;
+        private readonly MrpDBContext _dbContext;
 
-        public MachineRepository(UserDBContext context)
+        public MachineRepository(MrpDBContext context)
         {
             _dbContext = context;
         }

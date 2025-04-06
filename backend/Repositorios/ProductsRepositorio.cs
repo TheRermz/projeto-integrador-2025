@@ -7,9 +7,9 @@ namespace api_mrp;
 public class ProductsRepositorio : IProductsRepositorio
 {
 
-    private readonly UserDBContext _dbContext;
+    private readonly MrpDBContext _dbContext;
 
-    public ProductsRepositorio(UserDBContext context)
+    public ProductsRepositorio(MrpDBContext context)
     {
         _dbContext = context;
     }

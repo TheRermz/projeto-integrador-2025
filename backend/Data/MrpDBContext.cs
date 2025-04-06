@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api_mrp.Data
 {
-    public class UserDBContext : DbContext
+    public class MrpDBContext : DbContext
     {
-        public UserDBContext(DbContextOptions<UserDBContext> options) : base(options)
+        public MrpDBContext(DbContextOptions<MrpDBContext> options) : base(options)
         {
 
         }

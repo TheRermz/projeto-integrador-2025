@@ -27,7 +27,6 @@
 ───────── ❖ ─────────
 
 **TO-DO's** #to-do
-↪ Fazer diagramas (Item 5) **-** ==**½**==
 ↪ Realizar documentação dentro do código p/ melhor esclarecimento nas Models e Repositórios (Item 4)
 
 ---
@@ -433,7 +432,7 @@ public class ProductsRepositorio : IProductsRepositorio {
 
 ---
 
-# ==5. Diagramas== #to-do
+# 5. Diagramas
 ## 5.1 Sequência
 **FLUXO CÁLCULO MRP - I/II**
 ```mermaid
@@ -491,6 +490,10 @@ sequenceDiagram
 
     Interface-->>Usuario: Exibe os resultados na tela
 ```
+==Versão Imagem==
+![Diagrama_Sequencia_ProcessoMRP](https://github.com/user-attachments/assets/bd271c68-b28a-4582-9b5d-cd78a937511d)
+
+
 ───────── ❖ ─────────
 
 **FLUXO COMPLETO DO SISTEMA**
@@ -603,6 +606,8 @@ sequenceDiagram
 
     Frontend-->>Usuário: Exibir plano MRP
 ```
+==Versão Imagem==
+![Diagrama_Sequencia_FluxoCompleto](https://github.com/user-attachments/assets/1e13704f-d5ef-41d9-88c2-f462614cb0a0)
 
 ## 5.2 Caso de Uso
-TO-DO
+![UML Diagrama de caso de uso](https://github.com/user-attachments/assets/a96cc3e0-4a2e-4532-8c85-5f0a16f11629)

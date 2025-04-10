@@ -22,7 +22,14 @@
 
 [[DOCS - API ERP(MRP-I, MRP-II)#==5. Diagramas== to-do|5 Diagramas]]
 - [[DOCS - API ERP(MRP-I, MRP-II)#5.1 Sequência|5.2 Sequência]]
+
+	- [[DOCS - API ERP(MRP-I, MRP-II)#5.1.1 Por Requisito Funcional (MRP-I)|5.1.1 Por Requisito Funcional (MRP-I)]]
+	- [[DOCS - API ERP(MRP-I, MRP-II)#5.1.2 Por Requisito Funcional (MRP-II)|5.1.2 Por Requisito Funcional (MRP-II)]]
+
 - [[DOCS - API ERP(MRP-I, MRP-II)#5.2 Caso de Uso|5.2 Caso de Uso]]
+	- [[DOCS - API ERP(MRP-I, MRP-II)#5.2.1 Por Requisito Funcional (MRP-I)|5.2.1 Por Requisito Funcional (MRP-I)]]
+	- [[DOCS - API ERP(MRP-I, MRP-II)#5.2.2 Por Requisito Funcional (MRP-II)|5.2.2 Por Requisito Funcional (MRP-I)]]
+
 
 ───────── ❖ ─────────
 
@@ -490,9 +497,6 @@ sequenceDiagram
 
     Interface-->>Usuario: Exibe os resultados na tela
 ```
-==Versão Imagem==
-![Diagrama_Sequencia_ProcessoMRP](https://github.com/user-attachments/assets/bd271c68-b28a-4582-9b5d-cd78a937511d)
-
 
 ───────── ❖ ─────────
 
@@ -606,8 +610,295 @@ sequenceDiagram
 
     Frontend-->>Usuário: Exibir plano MRP
 ```
-==Versão Imagem==
-![Diagrama_Sequencia_FluxoCompleto](https://github.com/user-attachments/assets/1e13704f-d5ef-41d9-88c2-f462614cb0a0)
+
+### 5.1.1 Por Requisito Funcional (MRP-I)
+**LISTA DE MATERIAIS**
+```mermaid
+
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant BOMService as "Serviço BOM"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Inserir dados da lista de materiais
+    UI ->> Controller: Enviar dados validados
+    Controller ->> BOMService: Criar estrutura do produto
+    BOMService ->> DB: Salvar produto, componentes e subcomponentes
+    DB -->> BOMService: Confirmação de salvamento
+    BOMService -->> Controller: Sucesso
+    Controller -->> UI: Resposta para o usuário
+    UI -->> Usuario: Confirmação de cadastro
+
+```
+
+**ATUALIZAÇÃO DE ESTOQUE**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant EstoqueService as "Serviço de Estoque"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Solicita atualização de estoque
+    UI ->> Controller: Enviar dados do item e nova quantidade
+    Controller ->> EstoqueService: Atualizar estoque
+    EstoqueService ->> DB: Modificar quantidade do item
+    DB -->> EstoqueService: Confirmação
+    EstoqueService -->> Controller: Estoque atualizado
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Estoque atualizado com sucesso
+
+```
+
+**CONTROLE DE ORDENS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant OrdemService as "Serviço de Ordens"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Criar ou acompanhar ordem
+    UI ->> Controller: Enviar dados da ordem ou consulta
+    Controller ->> OrdemService: Processar ordem (criar ou consultar)
+    OrdemService ->> DB: Gravar/consultar ordem
+    DB -->> OrdemService: Resposta
+    OrdemService -->> Controller: Resultado da operação
+    Controller -->> UI: Resposta para o usuário
+    UI -->> Usuario: Confirmação ou status da ordem
+
+```
+
+**PREVISÃO DE DEMANDA**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant DemandaService as "Serviço de Demanda"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Inserir previsão de demanda
+    UI ->> Controller: Enviar dados (produto, quantidade, data)
+    Controller ->> DemandaService: Registrar previsão
+    DemandaService ->> DB: Salvar dados da previsão
+    DB -->> DemandaService: Confirmação
+    DemandaService -->> Controller: Previsão registrada
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Previsão de demanda cadastrada
+
+```
+
+**CRITÉRIOS DE PRIORIZAÇÃO**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant PrioridadeService as "Serviço de Priorização"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Definir critérios de priorização
+    UI ->> Controller: Enviar critérios
+    Controller ->> PrioridadeService: Processar regras
+    PrioridadeService ->> DB: Salvar ou atualizar regras
+    DB -->> PrioridadeService: Confirmação
+    PrioridadeService -->> Controller: Critérios registrados
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Critérios de priorização salvos
+
+```
+
+**CALENDÁRIO DE PRODUÇÃO**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant CalendarioService as "Serviço de Calendário"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Configurar calendário de produção
+    UI ->> Controller: Enviar dias úteis, feriados, pausas
+    Controller ->> CalendarioService: Processar calendário
+    CalendarioService ->> DB: Salvar configuração
+    DB -->> CalendarioService: Confirmação
+    CalendarioService -->> Controller: Calendário salvo
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Calendário configurado com sucesso
+
+```
+
+**CADASTRO DE INSUMOS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant InsumoService as "Serviço de Insumos"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Cadastrar novo insumo
+    UI ->> Controller: Enviar dados do insumo
+    Controller ->> InsumoService: Registrar insumo
+    InsumoService ->> DB: Salvar insumo no banco
+    DB -->> InsumoService: Confirmação
+    InsumoService -->> Controller: Insumo cadastrado
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Insumo cadastrado com sucesso
+
+```
+
+**CADASTRO DE PRODUTOS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant ProdutoService as "Serviço de Produtos"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Cadastrar novo produto
+    UI ->> Controller: Enviar dados do produto
+    Controller ->> ProdutoService: Registrar produto
+    ProdutoService ->> DB: Salvar informações do produto
+    DB -->> ProdutoService: Confirmação
+    ProdutoService -->> Controller: Produto cadastrado
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Produto cadastrado com sucesso
+
+```
+
+### 5.1.2 Por Requisito Funcional (MRP-II)
+**CADASTRO DE MÁQUINAS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant MaquinaService as "Serviço de Máquinas"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Inserir dados da máquina
+    UI ->> Controller: Enviar dados validados
+    Controller ->> MaquinaService: Registrar máquina
+    MaquinaService ->> DB: Salvar informações
+    DB -->> MaquinaService: Confirmação
+    MaquinaService -->> Controller: Sucesso
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Máquina cadastrada
+
+```
+
+**CADASTRO DE FUNCIONÁRIOS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant FuncionarioService as "Serviço de Funcionários"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Inserir dados do funcionário
+    UI ->> Controller: Enviar informações
+    Controller ->> FuncionarioService: Registrar funcionário
+    FuncionarioService ->> DB: Salvar informações
+    DB -->> FuncionarioService: Confirmação
+    FuncionarioService -->> Controller: Sucesso
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Funcionário cadastrado
+
+```
+
+**TEMPO DE MÁQUINA POR PEÇA**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant TempoMaquinaService as "Serviço de Tempo Máquina"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Registrar tempo por peça (máquina)
+    UI ->> Controller: Enviar tempo
+    Controller ->> TempoMaquinaService: Registrar tempo médio
+    TempoMaquinaService ->> DB: Salvar tempo por peça
+    DB -->> TempoMaquinaService: Confirmação
+    TempoMaquinaService -->> Controller: Tempo registrado
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Tempo de máquina salvo
+
+```
+
+**TEMPO DE FUNCIONÁRIO POR PEÇA**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant TempoFuncionarioService as "Serviço de Tempo Funcionário"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Registrar tempo por peça (funcionário)
+    UI ->> Controller: Enviar tempo
+    Controller ->> TempoFuncionarioService: Registrar tempo médio
+    TempoFuncionarioService ->> DB: Salvar tempo por peça
+    DB -->> TempoFuncionarioService: Confirmação
+    TempoFuncionarioService -->> Controller: Tempo registrado
+    Controller -->> UI: Notificar sucesso
+    UI -->> Usuario: Tempo de funcionário salvo
+
+```
+
+**CONTROLE DE CUSTO DAS MÁQUINAS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant CustoMaquinaService as "Serviço de Custo Máquina"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Consultar custos da máquina
+    UI ->> Controller: Requisitar dados
+    Controller ->> CustoMaquinaService: Calcular custos
+    CustoMaquinaService ->> DB: Buscar dados operacionais
+    DB -->> CustoMaquinaService: Dados recebidos
+    CustoMaquinaService -->> Controller: Custos calculados
+    Controller -->> UI: Exibir custos
+    UI -->> Usuario: Mostrar análise de custo
+
+```
+
+**CONTROLE DE CUSTOS DOS FUNCIONÁRIOS**
+```mermaid
+sequenceDiagram
+    actor Usuario as "Usuário"
+    participant UI as "Interface"
+    participant Controller as "Controlador"
+    participant CustoFuncionarioService as "Serviço de Custo Funcionário"
+    participant DB as "Banco de Dados"
+
+    Usuario ->> UI: Consultar custos da mão de obra
+    UI ->> Controller: Requisitar dados
+    Controller ->> CustoFuncionarioService: Calcular custos
+    CustoFuncionarioService ->> DB: Buscar salários e horas
+    DB -->> CustoFuncionarioService: Dados recebidos
+    CustoFuncionarioService -->> Controller: Custos calculados
+    Controller -->> UI: Exibir custos
+    UI -->> Usuario: Mostrar análise de custo
+
+```
 
 ## 5.2 Caso de Uso
-![UML Diagrama de caso de uso](https://github.com/user-attachments/assets/a96cc3e0-4a2e-4532-8c85-5f0a16f11629)
+![UML Diagrama de caso de uso](https://github.com/user-attachments/assets/fa8c3c5a-442b-4560-969f-8a56d5291bc9)
+
+
+### 5.2.1 Por Requisito Funcional (MRP-I)
+
+
+### 5.2.2 Por Requisito Funcional (MRP-II)

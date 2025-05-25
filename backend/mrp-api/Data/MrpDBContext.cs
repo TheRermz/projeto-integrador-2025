@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using mrp_api.DTOs.Models;
 using mrp_api.Objects.Models;
 
 namespace mrp_api.Data
@@ -14,6 +15,8 @@ namespace mrp_api.Data
         public DbSet<MachineModel> Machines { get; set; }
         public DbSet<SetorModel> Setor { get; set; }
         public DbSet<CargoModel> Cargo { get; set; }
+        public DbSet<ProdutosModel> Produto { get; set; }
+        public DbSet<InsumosModel> Insumos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

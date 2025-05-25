@@ -11,4 +11,11 @@
         Indisponivel = 0,
         Disponivel = 1
     }
+
+    public enum Fornecedores
+    {
+        Fornecedor1 = 0,
+        Fornecedor2 = 1,
+        Fornecedor3 = 2
+    }
 }

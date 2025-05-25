@@ -33,7 +33,7 @@ namespace mrp_api.Objects.Models
         public decimal salario { get; set; }
 
         [Column("Matricula")]
-        public string matricula { get; set; }
+        public int matricula { get; set; }
 
         [Column("ID_Maquina")]
         [ForeignKey("maquina")]

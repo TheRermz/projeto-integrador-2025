@@ -35,14 +35,27 @@ namespace mrp_api.Controllers
         }
 
         [HttpPost("/Register")]
-        public async Task<ActionResult<UserModel>> RegisterUser([FromBody] UserModel userModel)
+        public async Task<ActionResult<UserModel>> RegisterUser([FromForm] RegisterModelUsers registerUsers)
         {
-            UserModel user = await _userRepositorio.AddUser(userModel);
+
+            var Users = new UserModel
+            {
+                nome = registerUsers.nome,
+                matricula = registerUsers.matricula,
+                senha = registerUsers.senha,
+                id_Maquina = registerUsers.id_Maquina,
+                id_Cargo = registerUsers.id_Cargo,
+                id_Setor = registerUsers.id_Setor,
+                hierarquia = registerUsers.hierarquia,
+                status = registerUsers.status
+            };
+
+            UserModel user = await _userRepositorio.AddUser(Users);
             return Ok(new { message = "Usuario Registrado com sucesso" });
         }
 
         [HttpPost("/Login")]
-        public async Task<ActionResult> Login([FromBody] LoginModel login)
+        public async Task<ActionResult> Login([FromForm] LoginModel login)
         {
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.matricula == login.matricula && x.senha == login.senha);

@@ -10,8 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); //Swagger desativado, não mexer
+builder.Services.AddSwaggerGen();
 
+//Liberar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirTudo", policy =>
@@ -22,8 +23,10 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Configuração das Portas
 builder.WebHost.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
 
+// Configuração do Entity Framework Core com SQL Server
 builder.Services.AddEntityFrameworkSqlServer()
                 .AddDbContext<MrpDBContext>(
                     option => option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
@@ -33,6 +36,8 @@ builder.Services.AddScoped<IUserRepositorio, UserRepostorio>();
 builder.Services.AddScoped<IMachineRepositorio, MachinesRepositorio>();
 builder.Services.AddScoped<ICargoRepositorio, CargoRepositorio>();
 builder.Services.AddScoped<ISetorRepositorio, SetorRepositorio>();
+builder.Services.AddScoped<IProdutoRepositorio, ProdutoRepositorio>();
+builder.Services.AddScoped<IInsumoRepositorio, InsumosRepositorio>();
 
 var app = builder.Build();
 

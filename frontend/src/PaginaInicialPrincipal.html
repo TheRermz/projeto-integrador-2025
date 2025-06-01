@@ -309,8 +309,8 @@
       modulesGrid.className = 'modules-grid';
       
       const modules = [
-        { icon: '⬇️', label: 'Painel de Aviso' },
-        { icon: '📥', label: 'Entrada' },
+        { icon: '🧑‍💼', label: 'Cargos' },
+        { icon: '👔', label: 'Funcionários' },
         { icon: '📦', label: 'Produto' },
         { icon: '👤', label: 'Cliente' },
         { icon: '⬅️', label: 'Recebimento' },
@@ -320,18 +320,32 @@
       modules.forEach(module => {
         const moduleElement = document.createElement('div');
         moduleElement.className = 'module';
-        
+
         const moduleIcon = document.createElement('div');
         moduleIcon.className = 'module-icon';
         moduleIcon.textContent = module.icon;
-        
+
         const moduleLabel = document.createElement('div');
         moduleLabel.className = 'module-label';
         moduleLabel.textContent = module.label;
-        
+
         moduleElement.appendChild(moduleIcon);
         moduleElement.appendChild(moduleLabel);
-        
+
+        // Redireciona para Cargos.html ao clicar no módulo "Cargos"
+        if (module.label === 'Cargos') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Cargos.html';
+          });
+        }
+
+        // Redireciona para Funcionarios.html ao clicar no módulo "Funcionários"
+        if (module.label === 'Funcionários') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Funcionarios.html';
+          });
+        }
+
         modulesGrid.appendChild(moduleElement);
       });
       

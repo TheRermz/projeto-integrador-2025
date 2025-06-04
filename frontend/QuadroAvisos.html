@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLOAD - Painel de Aviso</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #003366;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #333399;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #666;
+        }
+        
+        .header-title {
+            font-size: 12px;
+            color: #ccc;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Navigation Styles */
+        .nav {
+            background-color: #333399;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #666;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+        }
+        
+        .nav-link {
+            cursor: pointer;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box input {
+            margin-left: 4px;
+            padding: 2px 8px;
+            height: 20px;
+            width: 96px;
+            font-size: 14px;
+        }
+        
+        /* Main Content Styles */
+        .main {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .page-title-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-button {
+            margin-right: 8px;
+            padding: 4px;
+            background-color: #0066cc;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-button:hover {
+            background-color: #0077dd;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .page-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background-color: #0066cc;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-group label {
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+        
+        .filter-group input, .filter-group select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        
+        .search-input-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding-left: 32px;
+            padding-right: 8px;
+            width: 256px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .refresh-button {
+            margin-left: auto;
+            background-color: #003366;
+            border: none;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .refresh-button:hover {
+            background-color: #004488;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .action-button {
+            background-color: #0066cc;
+            border: none;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .action-button:hover {
+            background-color: #0077dd;
+        }
+        
+        /* Notices Container */
+        .notices-container {
+            flex: 1;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            padding-right: 8px;
+        }
+        
+        /* Notice Card */
+        .notice-card {
+            background-color: #002244;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+            border: 1px solid #004488;
+        }
+        
+        .notice-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .notice-header {
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #004488;
+        }
+        
+        .notice-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .notice-date {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .notice-content {
+            padding: 12px;
+            flex: 1;
+        }
+        
+        .notice-text {
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .notice-footer {
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #001a33;
+            font-size: 12px;
+        }
+        
+        .notice-author {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .notice-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .notice-action {
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .notice-action:hover {
+            color: white;
+        }
+        
+        /* Priority Indicators */
+        .priority-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .priority-high {
+            background-color: #ff4d4d;
+        }
+        
+        .priority-medium {
+            background-color: #ffcc00;
+        }
+        
+        .priority-low {
+            background-color: #66cc66;
+        }
+        
+        .priority-info {
+            background-color: #3399ff;
+        }
+        
+        /* Read Status */
+        .notice-card.read {
+            opacity: 0.7;
+        }
+        
+        .notice-card.read .notice-title::after {
+            content: " (Lido)";
+            font-size: 12px;
+            color: #aaa;
+            font-weight: normal;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            background-color: #002244;
+            border-radius: 4px;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #0066cc;
+        }
+        
+        .empty-state-text {
+            font-size: 18px;
+            color: #aaa;
+        }
+        
+        /* Summary */
+        .summary-bar {
+            margin-top: 12px;
+            background-color: #0066cc;
+            padding: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background-color: #003366;
+            padding: 4px 16px;
+            font-size: 12px;
+            border-top: 1px solid #666;
+        }
+        
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .footer-info {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .footer-info-item b {
+            font-weight: bold;
+        }
+        
+        .footer-version {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .system-info {
+            text-align: right;
+        }
+        
+        .footer-links {
+            margin-top: 4px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .footer-link {
+            cursor: pointer;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .separator {
+            color: #666;
+        }
+        
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+        
+        .icon-arrow-left::before {
+            content: "←";
+        }
+        
+        .icon-search::before {
+            content: "🔍";
+            font-size: 12px;
+        }
+        
+        .icon-refresh::before {
+            content: "↻";
+        }
+        
+        .icon-plus::before {
+            content: "+";
+        }
+        
+        .icon-bell::before {
+            content: "🔔";
+            font-size: 12px;
+        }
+        
+        .icon-user::before {
+            content: "👤";
+            font-size: 12px;
+        }
+        
+        .icon-check::before {
+            content: "✓";
+        }
+        
+        .icon-star::before {
+            content: "★";
+        }
+        
+        .icon-trash::before {
+            content: "🗑️";
+            font-size: 12px;
+        }
+        
+        .icon-info::before {
+            content: "ℹ️";
+            font-size: 12px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .notices-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .refresh-button {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="logo">KLOAD</div>
+        <div class="nav-links">
+            <div class="nav-link">Cadastros</div>
+            <div class="nav-link">Movimento</div>
+            <div class="nav-link">Relatórios</div>
+            <div class="nav-link">Controle</div>
+            <div class="nav-link">Inteligência</div>
+            <div class="nav-link">Configurações</div>
+            <div class="nav-link">Utilities</div>
+            <div class="nav-link">Sobre</div>
+            <div class="search-box">
+                <span>Pesquisar:</span>
+                <input type="text">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title-container">
+                <button class="back-button" onclick="window.history.back()">
+                    <span class="icon icon-arrow-left"></span>
+                </button>
+                <h1 class="page-title">Painel de Aviso</h1>
+            </div>
+            <div class="page-logo">KLOAD</div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="search">Buscar:</label>
+                <div class="search-input-container">
+                    <input id="search" type="text" placeholder="Pesquisar avisos..." class="search-input">
+                    <span class="search-icon icon icon-search"></span>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label for="department">Departamento:</label>
+                <select id="department">
+                    <option value="todos">Todos os Departamentos</option>
+                    <option value="TI">TI</option>
+                    <option value="RH">RH</option>
+                    <option value="Financeiro">Financeiro</option>
+                    <option value="Operações">Operações</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Administrativo">Administrativo</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="priority">Prioridade:</label>
+                <select id="priority">
+                    <option value="todos">Todas as Prioridades</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Média</option>
+                    <option value="baixa">Baixa</option>
+                    <option value="informativo">Informativo</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="status">Status:</label>
+                <select id="status">
+                    <option value="todos">Todos</option>
+                    <option value="nao-lido">Não Lidos</option>
+                    <option value="lido">Lidos</option>
+                </select>
+            </div>
+            
+            <button class="refresh-button" id="refresh-button">
+                <span class="icon icon-refresh"></span>
+                Atualizar
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-button">
+                <span class="icon icon-plus"></span>
+                Novo Aviso
+            </button>
+            <button class="action-button">
+                <span class="icon icon-check"></span>
+                Marcar Todos Como Lidos
+            </button>
+        </div>
+
+        <!-- Notices Container -->
+        <div class="notices-container" id="notices-container">
+            <!-- Notice cards will be inserted here by JavaScript -->
+        </div>
+        
+        <!-- Summary -->
+        <div class="summary-bar">
+            <div id="total-notices">Total de avisos: 0</div>
+            <div id="unread-notices">Avisos não lidos: 0</div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-info">
+                <div class="footer-info-item">
+                    <b>Suporte Técnico:</b> Segunda a Sexta: 08:00 às 18:00
+                </div>
+                <div class="footer-info-item">
+                    <b>Plantão:</b> Segunda a Sexta: 18:00 às 23:00
+                </div>
+                <div class="footer-info-item">
+                    <b>Chat:</b> 24hs ativo!
+                </div>
+                <div class="footer-info-item">
+                    <b>E-mail:</b> atendimento@kloadsystem.com.br
+                </div>
+            </div>
+            <div class="footer-version">
+                <div>
+                    <b>Novidades da Versão 3.41</b>
+                </div>
+                
+            </div>
+        </div>
+        <div class="footer-links">
+            <div class="footer-link">Sair</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Perfil do Computador</div>
+            <span class="separator">|</span>
+            <div class="footer-link">PC</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Usuário</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Servidor</div>
+            <span class="separator">|</span>
+            <div class="footer-link">Parâmetros</div>
+        </div>
+    </footer>
+
+    <script>
+        // Mock data for notices
+        const notices = [
+            {
+                id: 1,
+                title: "Manutenção Programada do Sistema",
+                content: "Informamos que no próximo domingo (28/03) o sistema estará indisponível das 02:00 às 06:00 para manutenção programada e atualização de versão. Por favor, finalize todas as operações pendentes antes deste período.",
+                date: "2025-03-24T14:30:00",
+                department: "TI",
+                author: "Carlos Silva",
+                priority: "alta",
+                read: false
+            },
+            {
+                id: 2,
+                title: "Novo Procedimento de Cadastro de Produtos",
+                content: "A partir de 01/04/2025, todos os novos produtos deverão seguir o procedimento atualizado de cadastro, incluindo a obrigatoriedade de informar o código NCM e a unidade de medida padrão. Consulte o manual atualizado na seção de documentos.",
+                date: "2025-03-23T09:15:00",
+                department: "Operações",
+                author: "Ana Oliveira",
+                priority: "media",
+                read: false
+            },
+            {
+                id: 3,
+                title: "Treinamento: Novos Recursos do KLOAD v3.41",
+                content: "Convidamos todos os usuários para o treinamento online sobre os novos recursos da versão 3.41 do KLOAD. O treinamento ocorrerá na próxima terça-feira (30/03) às 14:00. O link para acesso será enviado por e-mail.",
+                date: "2025-03-22T16:45:00",
+                department: "TI",
+                author: "Marcos Pereira",
+                priority: "baixa",
+                read: true
+            },
+            {
+                id: 4,
+                title: "Alteração no Horário de Funcionamento",
+                content: "Informamos que a partir de 05/04/2025, o horário de funcionamento da empresa será alterado para 08:00 às 18:00, de segunda a sexta-feira. O sistema estará disponível normalmente durante o final de semana para consultas.",
+                date: "2025-03-21T11:20:00",
+                department: "RH",
+                author: "Juliana Costa",
+                priority: "media",
+                read: false
+            },
+            {
+                id: 5,
+                title: "Atualização de Dados Cadastrais",
+                content: "Solicitamos a todos os colaboradores que atualizem seus dados cadastrais no sistema até o dia 10/04/2025. Esta atualização é necessária para a emissão correta dos documentos fiscais e para o cumprimento das obrigações legais.",
+                date: "2025-03-20T10:00:00",
+                department: "Administrativo",
+                author: "Roberto Almeida",
+                priority: "alta",
+                read: true
+            },
+            {
+                id: 6,
+                title: "Nova Integração com Sistema Financeiro",
+                content: "Informamos que a partir de 15/04/2025, o KLOAD estará integrado com o sistema financeiro da empresa. Esta integração permitirá a consulta em tempo real de informações financeiras diretamente no KLOAD.",
+                date: "2025-03-19T15:30:00",
+                department: "Financeiro",
+                author: "Fernanda Santos",
+                priority: "informativo",
+                read: false
+            },
+            {
+                id: 7,
+                title: "Campanha de Vendas - 2º Trimestre",
+                content: "Lançamos hoje a campanha de vendas para o 2º trimestre de 2025. As metas e premiações estão disponíveis na seção 'Campanhas' do sistema. Boa sorte a todos!",
+                date: "2025-03-18T09:45:00",
+                department: "Comercial",
+                author: "Paulo Mendes",
+                priority: "media",
+                read: true
+            },
+            {
+                id: 8,
+                title: "Novo Fornecedor Homologado",
+                content: "Informamos que a empresa XYZ Suprimentos foi homologada como fornecedora de materiais de escritório. Os produtos já estão disponíveis para cotação no sistema de compras.",
+                date: "2025-03-17T14:10:00",
+                department: "Operações",
+                author: "Luciana Ferreira",
+                priority: "baixa",
+                read: false
+            }
+        ];
+
+        // DOM elements
+        const searchInput = document.getElementById('search');
+        const departmentSelect = document.getElementById('department');
+        const prioritySelect = document.getElementById('priority');
+        const statusSelect = document.getElementById('status');
+        const refreshButton = document.getElementById('refresh-button');
+        const noticesContainer = document.getElementById('notices-container');
+        const totalNoticesElement = document.getElementById('total-notices');
+        const unreadNoticesElement = document.getElementById('unread-notices');
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Get priority class
+        function getPriorityClass(priority) {
+            switch(priority) {
+                case 'alta': return 'priority-high';
+                case 'media': return 'priority-medium';
+                case 'baixa': return 'priority-low';
+                case 'informativo': return 'priority-info';
+                default: return '';
+            }
+        }
+
+        // Get priority label
+        function getPriorityLabel(priority) {
+            switch(priority) {
+                case 'alta': return 'Alta';
+                case 'media': return 'Média';
+                case 'baixa': return 'Baixa';
+                case 'informativo': return 'Informativo';
+                default: return '';
+            }
+        }
+
+        // Create notice card
+        function createNoticeCard(notice) {
+            const card = document.createElement('div');
+            card.className = `notice-card ${notice.read ? 'read' : ''}`;
+            card.dataset.id = notice.id;
+            
+            card.innerHTML = `
+                <div class="notice-header">
+                    <div class="notice-title">
+                        <span class="priority-indicator ${getPriorityClass(notice.priority)}" title="${getPriorityLabel(notice.priority)}"></span>
+                        ${notice.title}
+                    </div>
+                    <div class="notice-date">${formatDate(notice.date)}</div>
+                </div>
+                <div class="notice-content">
+                    <div class="notice-text">${notice.content}</div>
+                </div>
+                <div class="notice-footer">
+                    <div class="notice-author">
+                        <span class="icon icon-user"></span>
+                        ${notice.author} (${notice.department})
+                    </div>
+                    <div class="notice-actions">
+                        <span class="notice-action mark-read" title="${notice.read ? 'Marcar como não lido' : 'Marcar como lido'}">
+                            <span class="icon icon-check"></span>
+                        </span>
+                        <span class="notice-action favorite" title="Favoritar">
+                            <span class="icon icon-star"></span>
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listener to mark as read/unread
+            const markReadButton = card.querySelector('.mark-read');
+            markReadButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const noticeId = parseInt(card.dataset.id);
+                const noticeIndex = notices.findIndex(n => n.id === noticeId);
+                
+                if (noticeIndex !== -1) {
+                    notices[noticeIndex].read = !notices[noticeIndex].read;
+                    renderNotices();
+                }
+            });
+            
+            return card;
+        }
+
+        // Create empty state
+        function createEmptyState() {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            
+            emptyState.innerHTML = `
+                <div class="empty-state-icon">
+                    <span class="icon icon-info"></span>
+                </div>
+                <div class="empty-state-text">Nenhum aviso encontrado</div>
+            `;
+            
+            return emptyState;
+        }
+
+        // Filter and render notices
+        function renderNotices() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const departmentFilter = departmentSelect.value;
+            const priorityFilter = prioritySelect.value;
+            const statusFilter = statusSelect.value;
+            
+            // Filter the notices
+            const filteredNotices = notices.filter(notice => {
+                const matchesSearch = 
+                    notice.title.toLowerCase().includes(searchTerm) || 
+                    notice.content.toLowerCase().includes(searchTerm) ||
+                    notice.author.toLowerCase().includes(searchTerm);
+                
+                const matchesDepartment = departmentFilter === "todos" || notice.department === departmentFilter;
+                const matchesPriority = priorityFilter === "todos" || notice.priority === priorityFilter;
+                
+                let matchesStatus = true;
+                if (statusFilter === "nao-lido") {
+                    matchesStatus = !notice.read;
+                } else if (statusFilter === "lido") {
+                    matchesStatus = notice.read;
+                }
+                
+                return matchesSearch && matchesDepartment && matchesPriority && matchesStatus;
+            });
+            
+            // Sort notices by date (newest first)
+            filteredNotices.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Clear the container
+            noticesContainer.innerHTML = '';
+            
+            // Render the filtered notices or empty state
+            if (filteredNotices.length > 0) {
+                filteredNotices.forEach(notice => {
+                    const card = createNoticeCard(notice);
+                    noticesContainer.appendChild(card);
+                });
+            } else {
+                noticesContainer.appendChild(createEmptyState());
+            }
+            
+            // Update summary
+            const totalNotices = filteredNotices.length;
+            const unreadNotices = filteredNotices.filter(notice => !notice.read).length;
+            
+            totalNoticesElement.textContent = `Total de avisos: ${totalNotices}`;
+            unreadNoticesElement.textContent = `Avisos não lidos: ${unreadNotices}`;
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', renderNotices);
+        departmentSelect.addEventListener('change', renderNotices);
+        prioritySelect.addEventListener('change', renderNotices);
+        statusSelect.addEventListener('change', renderNotices);
+        refreshButton.addEventListener('click', renderNotices);
+
+        // Mark all as read button
+        document.querySelector('.action-buttons button:nth-child(2)').addEventListener('click', () => {
+            notices.forEach(notice => {
+                notice.read = true;
+            });
+            renderNotices();
+        });
+
+        // Initial render
+        renderNotices();
+    </script>
+</body>
+</html>

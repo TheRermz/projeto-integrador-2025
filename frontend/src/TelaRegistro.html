@@ -11,143 +11,68 @@
       box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
-    
+
+    html, body {
+      height: 100%;
+    }
+
     body {
       background-color: white;
-    }
-    
-    .window-header {
-      background-color: #e6e6e6;
-      border-bottom: 1px solid #cccccc;
-      padding: 4px 8px;
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
+      flex-direction: column;
     }
-    
-    .window-title {
-      flex-grow: 1;
-      text-align: center;
-    }
-    
-    .window-controls {
-      display: flex;
-      gap: 4px;
-    }
-    
-    .window-control {
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #999;
-      background-color: #f0f0f0;
-      cursor: pointer;
-    }
-    
-    .nav-header {
-      background-color: #3949ab;
-      color: white;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-    
-    .nav-container {
-      display: flex;
-      align-items: center;
-    }
-    
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      padding: 12px 0;
-      margin-right: 32px;
-    }
-    
-    .nav-menu {
-      display: flex;
-    }
-    
-    .nav-item {
-      padding: 12px 16px;
-      color: white;
-      text-decoration: none;
-    }
-    
-    .nav-item:hover, .nav-item.active {
-      background-color: #303f9f;
-    }
-    
-    .search-box {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      color: white;
-    }
-    
-    .search-input {
-      border: 1px solid #ccc;
-      padding: 2px 4px;
-      font-size: 12px;
-      width: 150px;
-    }
-    
+
     .main-content {
       background-color: #005599;
-      min-height: calc(100vh - 80px);
+      flex: 1 0 auto;
       padding: 20px;
       position: relative;
     }
-    
+
     .logo-container {
       position: absolute;
       top: 20px;
       right: 20px;
       text-align: right;
     }
-    
+
     .kload-logo {
       font-size: 48px;
       font-weight: bold;
       color: white;
       line-height: 1;
     }
-    
+
     .registration-form-container {
       max-width: 500px;
-      margin: 40px auto 0;
+      margin: 210px auto 0;
     }
-    
+
     .registration-form {
       background-color: #0066aa;
       border-radius: 4px;
       padding: 24px;
       color: white;
     }
-    
+
     .form-title {
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 24px;
       text-align: center;
     }
-    
+
     .form-group {
       margin-bottom: 16px;
     }
-    
+
     .form-label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
     }
-    
+
     .form-input {
       width: 100%;
       padding: 8px;
@@ -155,11 +80,11 @@
       border-radius: 4px;
       font-size: 14px;
     }
-    
+
     .password-container {
       position: relative;
     }
-    
+
     .toggle-password {
       position: absolute;
       right: 10px;
@@ -170,7 +95,7 @@
       cursor: pointer;
       color: #555;
     }
-    
+
     .submit-button {
       width: 100%;
       padding: 10px;
@@ -183,45 +108,46 @@
       cursor: pointer;
       margin-top: 16px;
     }
-    
+
     .submit-button:hover {
       background-color: #303f9f;
     }
-    
+
     .login-link {
       text-align: center;
       margin-top: 16px;
       font-size: 14px;
     }
-    
+
     .login-link a {
       color: white;
       text-decoration: underline;
     }
-    
+
     .login-link a:hover {
       color: #cce6ff;
     }
-    
+
     .footer {
       background-color: #005599;
       color: white;
       padding: 8px 16px;
       font-size: 12px;
       border-top: 1px solid #0066aa;
+      flex-shrink: 0;
     }
-    
+
     .footer-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .support-info {
       display: flex;
       gap: 16px;
     }
-    
+
     .status-bar {
       background-color: #004488;
       color: white;
@@ -231,18 +157,15 @@
       gap: 16px;
       overflow-x: auto;
       white-space: nowrap;
+      flex-shrink: 0;
     }
-    
+
     @media (max-width: 768px) {
-      .nav-menu {
-        display: none;
-      }
-      
       .support-info {
         flex-direction: column;
         gap: 4px;
       }
-      
+
       .footer-content {
         flex-direction: column;
         gap: 8px;
@@ -250,37 +173,7 @@
     }
   </style>
 </head>
-<body>
-  <!-- Window Header -->
-  <div class="window-header">
-    <div class="window-title">KLOAD - Versão: 0.1 - Código Cliente: - ESCRITORIO:</div>
-    <div class="window-controls">
-      <div class="window-control">&#8212;</div>
-      <div class="window-control">&#9744;</div>
-      <div class="window-control">&#10005;</div>
-    </div>
-  </div>
-  
-  <!-- Navigation Header -->
-  <div class="nav-header">
-    <div class="container nav-container">
-      <div class="logo">KLOAD</div>
-      <div class="nav-menu">
-        <a href="#" class="nav-item active">Cadastros</a>
-        <a href="#" class="nav-item">Movimento</a>
-        <a href="#" class="nav-item">Relatórios</a>
-        <a href="#" class="nav-item">Controle</a>
-        <a href="#" class="nav-item">Inteligência</a>
-        <a href="#" class="nav-item">Configurações</a>
-        <a href="#" class="nav-item">Utilitários</a>
-        <a href="#" class="nav-item">Sobre</a>
-      </div>
-      <div class="search-box">
-        <span>Pesquisar: </span>
-        <input type="text" class="search-input">
-      </div>
-    </div>
-  </div>
+<body>  
   
   <!-- Main Content -->
   <div class="main-content">
@@ -327,27 +220,17 @@
   <div class="footer">
     <div class="footer-content">
       <div class="support-info">
-        <div>
-          <strong>Chat:</strong> Clique aqui!<br>
-          E-mail: kload@system.com.br
-        </div>
+        <!-- chatSupport removido -->
       </div>
       <div>
-        <strong>Novidades da Versão 3.51</strong><br>
-        Clique aqui!
+        <strong> Versão 1.05.</strong>
       </div>
     </div>
   </div>
   
   <!-- Status Bar -->
-  <div class="status-bar">
-    <span>Loja: </span>
-    <span>Data: </span>
-    <span>Nome do Computador: </span>
-    <span>IP: </span>
-    <span>Usuário: </span>
-    <span>Operador: </span>
-    <span>Atendimento: </span>
+  <div class="status-bar" id="statusBar">
+    <!-- Conteúdo será preenchido via JS -->
   </div>
   
   <script>
@@ -362,6 +245,16 @@
       togglePassword.textContent = type === 'password' ? '👁️' : '🔒';
     });
     
+    // Atualiza status bar com email e data
+    function updateStatusBar() {
+      const statusBar = document.getElementById('statusBar');
+      const userEmail = localStorage.getItem('userEmail') || '';
+      const now = new Date();
+      statusBar.innerHTML = `Data: ${now.toLocaleString('pt-BR')} | Usuário: ${userEmail} |`;
+    }
+    updateStatusBar();
+    setInterval(updateStatusBar, 1000);
+
     // Form submission
     const form = document.getElementById('registrationForm');
     form.addEventListener('submit', async function(e) {
@@ -383,6 +276,8 @@
         });
 
         if (response.ok) {
+          // Salva email no localStorage
+          localStorage.setItem('userEmail', data.email);
           window.location.href = 'PaginaInicialPrincipal.html';
         } else {
           let errorMsg = response.statusText;

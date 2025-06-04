@@ -14,7 +14,7 @@
         }
         
         body {
-            background-color: #003366;
+            background-color: #005599;
             color: white;
             display: flex;
             flex-direction: column;
@@ -22,43 +22,6 @@
             overflow: hidden;
         }
         
-        /* Header Styles */
-        .header {
-            background-color: #333399;
-            padding: 4px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #666;
-        }
-        
-        .header-title {
-            font-size: 12px;
-            color: #ccc;
-        }
-        
-        .window-controls {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .window-button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        
-        /* Navigation Styles */
-        .nav {
-            background-color: #333399;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border-bottom: 1px solid #666;
-        }
         
         .logo {
             font-weight: bold;
@@ -73,10 +36,12 @@
         
         .nav-link {
             cursor: pointer;
+            color: white;
         }
         
         .nav-link:hover {
             text-decoration: underline;
+            background-color: #303f9f;
         }
         
         .search-box {
@@ -99,6 +64,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background-color: #005599;
         }
         
         .page-header {
@@ -116,7 +82,7 @@
         .back-button {
             margin-right: 8px;
             padding: 4px;
-            background-color: #0066cc;
+            background-color: #0066aa;
             border: none;
             border-radius: 4px;
             color: white;
@@ -127,7 +93,7 @@
         }
         
         .back-button:hover {
-            background-color: #0077dd;
+            background-color: #0077bb;
         }
         
         .page-title {
@@ -160,17 +126,17 @@
         
         /* Form Section */
         .form-section {
-            background-color: #002244;
+            background-color: #003366;
             border-radius: 4px;
-            border: 1px solid #004488;
+            border: 1px solid #0066aa;
             overflow: hidden;
         }
         
         .section-header {
-            background-color: #001a33;
+            background-color: #3949ab;
             padding: 8px 12px;
             font-weight: bold;
-            border-bottom: 1px solid #004488;
+            border-bottom: 1px solid #0066aa;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -206,7 +172,7 @@
             width: 100%;
             padding: 8px;
             border-radius: 4px;
-            border: 1px solid #004488;
+            border: 1px solid #0066aa;
             background-color: #001a33;
             color: white;
         }
@@ -215,8 +181,8 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #0066cc;
-            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.25);
+            border-color: #0077bb;
+            box-shadow: 0 0 0 2px rgba(0, 119, 187, 0.25);
         }
         
         .form-group input[type="date"] {
@@ -263,21 +229,21 @@
         }
         
         .btn-primary {
-            background-color: #0066cc;
+            background-color: #0066aa;
             color: white;
         }
         
         .btn-primary:hover {
-            background-color: #0077dd;
+            background-color: #0077bb;
         }
         
         .btn-secondary {
-            background-color: #003366;
+            background-color: #3949ab;
             color: white;
         }
         
         .btn-secondary:hover {
-            background-color: #004488;
+            background-color: #303f9f;
         }
         
         .btn-danger {
@@ -300,23 +266,23 @@
         }
         
         .items-table th {
-            background-color: #001a33;
+            background-color: #3949ab;
             text-align: left;
             padding: 8px;
-            border-bottom: 1px solid #004488;
+            border-bottom: 1px solid #0066aa;
         }
         
         .items-table td {
             padding: 8px;
-            border-bottom: 1px solid #004488;
+            border-bottom: 1px solid #0066aa;
         }
         
         .items-table tr:nth-child(even) {
-            background-color: #002a55;
+            background-color: #0066aa;
         }
         
         .items-table tr:hover {
-            background-color: #003366;
+            background-color: #005599;
         }
         
         .items-table .text-right {
@@ -342,7 +308,7 @@
         }
         
         .items-table .action-btn:hover {
-            background-color: #0066cc;
+            background-color: #0077bb;
         }
         
         .items-table .action-btn.delete:hover {
@@ -371,7 +337,7 @@
         }
         
         .summary-table .total-row {
-            border-top: 1px solid #004488;
+            border-top: 1px solid #0066aa;
             font-size: 18px;
         }
         
@@ -386,7 +352,7 @@
             left: 0;
             right: 0;
             background-color: #001a33;
-            border: 1px solid #004488;
+            border: 1px solid #0066aa;
             border-radius: 0 0 4px 4px;
             max-height: 200px;
             overflow-y: auto;
@@ -396,11 +362,11 @@
         .product-search-item {
             padding: 8px;
             cursor: pointer;
-            border-bottom: 1px solid #004488;
+            border-bottom: 1px solid #0066aa;
         }
         
         .product-search-item:hover {
-            background-color: #0066cc;
+            background-color: #0077bb;
         }
         
         .product-search-item .product-code {
@@ -410,12 +376,11 @@
         
         /* Preview Panel */
         .preview-panel {
-            width: 0;
-            background-color: #002244;
+            background-color: #003366;
             border-radius: 4px;
             overflow: hidden;
             transition: width 0.3s ease;
-            border: 1px solid #004488;
+            border: 1px solid #0066aa;
         }
         
         .preview-panel.open {
@@ -423,12 +388,12 @@
         }
         
         .preview-header {
-            background-color: #001a33;
+            background-color: #3949ab;
             padding: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #004488;
+            border-bottom: 1px solid #0066aa;
         }
         
         .preview-title {
@@ -457,7 +422,7 @@
         .preview-section-title {
             font-weight: bold;
             margin-bottom: 8px;
-            border-bottom: 1px solid #004488;
+            border-bottom: 1px solid #0066aa;
             padding-bottom: 4px;
         }
         
@@ -511,10 +476,10 @@
         
         /* Footer Styles */
         .footer {
-            background-color: #003366;
+            background-color: #005599;
             padding: 4px 16px;
             font-size: 12px;
-            border-top: 1px solid #666;
+            border-top: 1px solid #0066aa;
         }
         
         .footer-top {
@@ -647,34 +612,6 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-title">KLOAD - Versão: 0.1 - Código Cliente - ESCRITÓRIO</div>
-        <div class="window-controls">
-            <button class="window-button">-</button>
-            <button class="window-button">□</button>
-            <button class="window-button">×</button>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="logo">KLOAD</div>
-        <div class="nav-links">
-            <div class="nav-link">Cadastros</div>
-            <div class="nav-link">Movimento</div>
-            <div class="nav-link">Relatórios</div>
-            <div class="nav-link">Controle</div>
-            <div class="nav-link">Inteligência</div>
-            <div class="nav-link">Configurações</div>
-            <div class="nav-link">Utilities</div>
-            <div class="nav-link">Sobre</div>
-            <div class="search-box">
-                <span>Pesquisar:</span>
-                <input type="text">
-            </div>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <main class="main">
@@ -741,6 +678,7 @@
                             </div>
                         </div>
                         
+                        <!-- Fornecedor/Condição de Pagamento (apenas para Compra) -->
                         <div class="form-row supplier-fields">
                             <div class="form-group">
                                 <label for="supplier">Fornecedor</label>
@@ -760,6 +698,24 @@
                                     <option value="30 dias">30 dias</option>
                                     <option value="30/60 dias">30/60 dias</option>
                                     <option value="30/60/90 dias">30/60/90 dias</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Máquina/Operador (apenas para Produção) -->
+                        <div class="form-row production-fields" style="display: none;">
+                            <div class="form-group">
+                                <label for="machine">Máquina</label>
+                                <select id="machine">
+                                    <option value="">Selecione uma máquina</option>
+                                    <!-- opções via JS futuramente -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="operator">Operador</label>
+                                <select id="operator">
+                                    <option value="">Selecione um operador</option>
+                                    <!-- opções via JS futuramente -->
                                 </select>
                             </div>
                         </div>
@@ -1063,504 +1019,29 @@
         const closePreviewButton = document.getElementById('close-preview-button');
         const previewContent = document.getElementById('preview-content');
         const statusMessage = document.getElementById('status-message');
-        const entryTypeRadios = document.querySelectorAll('input[name="entry-type"]');
         const supplierFields = document.querySelector('.supplier-fields');
-        const documentNumber = document.getElementById('document-number');
-        const documentDate = document.getElementById('document-date');
-        const entryDate = document.getElementById('entry-date');
-        const supplier = document.getElementById('supplier');
-        const paymentTerms = document.getElementById('payment-terms');
-        const notes = document.getElementById('notes');
+        // Adicione referência para os campos de produção
+        const productionFields = document.querySelector('.production-fields');
+        const entryTypeRadios = document.querySelectorAll('input[name="entry-type"]');
+        // ...existing code...
 
-        // Set default dates
-        const today = new Date().toISOString().split('T')[0];
-        documentDate.value = today;
-        entryDate.value = today;
-
-        // Items array
-        let items = [];
-        let selectedProduct = null;
-        let editingItemIndex = -1;
-
-        // Format currency
-        function formatCurrency(value) {
-            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-
-        // Calculate item total
-        function calculateItemTotal() {
-            const quantity = parseFloat(productQuantity.value) || 0;
-            const price = parseFloat(productPrice.value) || 0;
-            const total = quantity * price;
-            productTotal.value = formatCurrency(total);
-            return total;
-        }
-
-        // Calculate order totals
-        function calculateOrderTotals() {
-            const subtotal = items.reduce((sum, item) => sum + item.total, 0);
-            const taxRate = 0.12; // 12% tax rate for example
-            const taxes = subtotal * taxRate;
-            const total = subtotal + taxes;
-            
-            subtotalElement.textContent = formatCurrency(subtotal);
-            taxesElement.textContent = formatCurrency(taxes);
-            totalElement.textContent = formatCurrency(total);
-            
-            return { subtotal, taxes, total };
-        }
-
-        // Render items table
-        function renderItemsTable() {
-            // Clear table
-            while (itemsTbody.firstChild) {
-                itemsTbody.removeChild(itemsTbody.firstChild);
-            }
-            
-            // Show empty row if no items
-            if (items.length === 0) {
-                itemsTbody.appendChild(emptyRow);
-                return;
-            }
-            
-            // Add items to table
-            items.forEach((item, index) => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${item.code}</td>
-                    <td>${item.name}</td>
-                    <td>${item.category}</td>
-                    <td class="text-right">${item.quantity.toLocaleString('pt-BR')}</td>
-                    <td>${item.unit}</td>
-                    <td class="text-right">${formatCurrency(item.price)}</td>
-                    <td class="text-right">${formatCurrency(item.total)}</td>
-                    <td>
-                        <div class="actions">
-                            <button class="action-btn edit" title="Editar" data-index="${index}">
-                                <span class="icon icon-edit"></span>
-                            </button>
-                            <button class="action-btn delete" title="Excluir" data-index="${index}">
-                                <span class="icon icon-trash"></span>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                
-                itemsTbody.appendChild(row);
-            });
-            
-            // Add event listeners to edit and delete buttons
-            const editButtons = itemsTbody.querySelectorAll('.edit');
-            const deleteButtons = itemsTbody.querySelectorAll('.delete');
-            
-            editButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const index = parseInt(button.dataset.index);
-                    editItem(index);
-                });
-            });
-            
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const index = parseInt(button.dataset.index);
-                    deleteItem(index);
-                });
-            });
-            
-            // Calculate totals
-            calculateOrderTotals();
-        }
-
-        // Add item to order
-        function addItem() {
-            if (!selectedProduct) {
-                showStatusMessage('Selecione um produto válido.', 'error');
-                return;
-            }
-            
-            const quantity = parseFloat(productQuantity.value);
-            if (isNaN(quantity) || quantity <= 0) {
-                showStatusMessage('Quantidade inválida.', 'error');
-                return;
-            }
-            
-            const price = parseFloat(productPrice.value);
-            if (isNaN(price) || price < 0) {
-                showStatusMessage('Preço inválido.', 'error');
-                return;
-            }
-            
-            const total = quantity * price;
-            
-            const item = {
-                id: selectedProduct.id,
-                code: selectedProduct.code,
-                name: selectedProduct.name,
-                category: selectedProduct.category,
-                quantity: quantity,
-                unit: selectedProduct.unit,
-                price: price,
-                total: total
-            };
-            
-            if (editingItemIndex >= 0) {
-                // Update existing item
-                items[editingItemIndex] = item;
-                editingItemIndex = -1;
-            } else {
-                // Add new item
-                items.push(item);
-            }
-            
-            // Reset form
-            resetItemForm();
-            
-            // Hide form
-            addItemForm.style.display = 'none';
-            
-            // Render table
-            renderItemsTable();
-            
-            showStatusMessage('Item adicionado com sucesso.', 'success');
-        }
-
-        // Edit item
-        function editItem(index) {
-            const item = items[index];
-            editingItemIndex = index;
-            
-            // Find product
-            selectedProduct = products.find(p => p.id === item.id);
-            
-            // Fill form
-            productSearch.value = `${item.code} - ${item.name}`;
-            productCategory.value = item.category;
-            productQuantity.value = item.quantity;
-            productUnit.value = item.unit;
-            productPrice.value = item.price;
-            calculateItemTotal();
-            
-            // Show form
-            addItemForm.style.display = 'block';
-            
-            // Focus on quantity
-            productQuantity.focus();
-        }
-
-        // Delete item
-        function deleteItem(index) {
-            if (confirm('Tem certeza que deseja remover este item?')) {
-                items.splice(index, 1);
-                renderItemsTable();
-                showStatusMessage('Item removido com sucesso.', 'success');
-            }
-        }
-
-        // Reset item form
-        function resetItemForm() {
-            productSearch.value = '';
-            productCategory.value = '';
-            productQuantity.value = '1';
-            productUnit.value = '';
-            productPrice.value = '0.00';
-            productTotal.value = '';
-            selectedProduct = null;
-            editingItemIndex = -1;
-        }
-
-        // Show status message
-        function showStatusMessage(message, type) {
-            statusMessage.className = `status-message status-${type}`;
-            statusMessage.innerHTML = `
-                <span class="icon icon-${type}"></span>
-                ${message}
-            `;
-            statusMessage.style.display = 'flex';
-            
-            // Hide message after 5 seconds
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-            }, 5000);
-        }
-
-        // Toggle supplier fields based on entry type
+        // Alterna exibição dos campos conforme tipo de entrada
         function toggleSupplierFields() {
             const entryType = document.querySelector('input[name="entry-type"]:checked').value;
             if (entryType === 'producao') {
                 supplierFields.style.display = 'none';
+                productionFields.style.display = 'flex';
             } else {
                 supplierFields.style.display = 'flex';
+                productionFields.style.display = 'none';
             }
         }
-
-        // Preview entry
-        function previewEntry() {
-            if (items.length === 0) {
-                showStatusMessage('Adicione pelo menos um item para visualizar.', 'warning');
-                return;
-            }
-            
-            const entryType = document.querySelector('input[name="entry-type"]:checked').value;
-            const entryTypeText = {
-                'compra': 'Compra',
-                'producao': 'Produção',
-                'devolucao': 'Devolução',
-                'ajuste': 'Ajuste'
-            }[entryType];
-            
-            const { subtotal, taxes, total } = calculateOrderTotals();
-            
-            previewContent.innerHTML = `
-                <div class="preview-section">
-                    <div class="preview-section-title">Informações do Documento</div>
-                    <div class="preview-row">
-                        <div class="preview-label">Tipo de Entrada:</div>
-                        <div class="preview-value">${entryTypeText}</div>
-                    </div>
-                    <div class="preview-row">
-                        <div class="preview-label">Documento:</div>
-                        <div class="preview-value">${documentNumber.value || 'N/A'}</div>
-                    </div>
-                    <div class="preview-row">
-                        <div class="preview-label">Data do Doc.:</div>
-                        <div class="preview-value">${formatDate(documentDate.value)}</div>
-                    </div>
-                    <div class="preview-row">
-                        <div class="preview-label">Data de Entrada:</div>
-                        <div class="preview-value">${formatDate(entryDate.value)}</div>
-                    </div>
-                    ${entryType !== 'producao' ? `
-                    <div class="preview-row">
-                        <div class="preview-label">Fornecedor:</div>
-                        <div class="preview-value">${supplier.value || 'N/A'}</div>
-                    </div>
-                    <div class="preview-row">
-                        <div class="preview-label">Pagamento:</div>
-                        <div class="preview-value">${paymentTerms.value || 'N/A'}</div>
-                    </div>
-                    ` : ''}
-                    ${notes.value ? `
-                    <div class="preview-row">
-                        <div class="preview-label">Observações:</div>
-                        <div class="preview-value">${notes.value}</div>
-                    </div>
-                    ` : ''}
-                </div>
-                
-                <div class="preview-section">
-                    <div class="preview-section-title">Itens</div>
-                    <div class="items-table-container">
-                        <table class="items-table">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Produto</th>
-                                    <th class="text-right">Qtd</th>
-                                    <th>Un</th>
-                                    <th class="text-right">Preço</th>
-                                    <th class="text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${items.map(item => `
-                                <tr>
-                                    <td>${item.code}</td>
-                                    <td>${item.name}</td>
-                                    <td class="text-right">${item.quantity.toLocaleString('pt-BR')}</td>
-                                    <td>${item.unit}</td>
-                                    <td class="text-right">${formatCurrency(item.price)}</td>
-                                    <td class="text-right">${formatCurrency(item.total)}</td>
-                                </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="preview-section">
-                    <div class="preview-section-title">Resumo</div>
-                    <div class="preview-row">
-                        <div class="preview-label">Subtotal:</div>
-                        <div class="preview-value">${formatCurrency(subtotal)}</div>
-                    </div>
-                    <div class="preview-row">
-                        <div class="preview-label">Impostos:</div>
-                        <div class="preview-value">${formatCurrency(taxes)}</div>
-                    </div>
-                    <div class="preview-row" style="font-weight: bold;">
-                        <div class="preview-label">Total:</div>
-                        <div class="preview-value">${formatCurrency(total)}</div>
-                    </div>
-                </div>
-                
-                <div class="preview-actions">
-                    <button class="btn btn-primary" id="confirm-entry-btn">
-                        <span class="icon icon-check"></span>
-                        Confirmar Entrada
-                    </button>
-                </div>
-            `;
-            
-            // Show preview panel
-            previewPanel.classList.add('open');
-            
-            // Add event listener to confirm button
-            document.getElementById('confirm-entry-btn').addEventListener('click', saveEntry);
-        }
-
-        // Format date
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            
-            const date = new Date(dateString);
-            return date.toLocaleDateString('pt-BR');
-        }
-
-        // Save entry
-        function saveEntry() {
-            // In a real application, this would send data to the server
-            // For this demo, we'll just show a success message and reset the form
-            
-            showStatusMessage('Entrada registrada com sucesso!', 'success');
-            
-            // Close preview panel
-            previewPanel.classList.remove('open');
-            
-            // Reset form
-            clearForm();
-        }
-
-        // Clear form
-        function clearForm() {
-            // Reset document info
-            document.querySelector('#entry-type-purchase').checked = true;
-            documentNumber.value = '';
-            documentDate.value = today;
-            entryDate.value = today;
-            supplier.value = '';
-            paymentTerms.value = '';
-            notes.value = '';
-            
-            // Reset items
-            items = [];
-            renderItemsTable();
-            
-            // Reset item form
-            resetItemForm();
-            addItemForm.style.display = 'none';
-            
-            // Show supplier fields
-            toggleSupplierFields();
-        }
-
-        // Search products
-        function searchProducts(query) {
-            if (!query) {
-                productSearchResults.style.display = 'none';
-                return;
-            }
-            
-            query = query.toLowerCase();
-            
-            const results = products.filter(product => 
-                product.code.toLowerCase().includes(query) || 
-                product.name.toLowerCase().includes(query)
-            );
-            
-            if (results.length === 0) {
-                productSearchResults.style.display = 'none';
-                return;
-            }
-            
-            productSearchResults.innerHTML = '';
-            
-            results.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'product-search-item';
-                item.innerHTML = `
-                    <div class="product-code">${product.code}</div>
-                    <div>${product.name}</div>
-                `;
-                
-                item.addEventListener('click', () => {
-                    selectProduct(product);
-                });
-                
-                productSearchResults.appendChild(item);
-            });
-            
-            productSearchResults.style.display = 'block';
-        }
-
-        // Select product
-        function selectProduct(product) {
-            selectedProduct = product;
-            
-            productSearch.value = `${product.code} - ${product.name}`;
-            productCategory.value = product.category;
-            productUnit.value = product.unit;
-            productPrice.value = product.price;
-            
-            calculateItemTotal();
-            
-            productSearchResults.style.display = 'none';
-            
-            // Focus on quantity
-            productQuantity.focus();
-        }
-
-        // Event listeners
-        addItemBtn.addEventListener('click', () => {
-            resetItemForm();
-            addItemForm.style.display = 'block';
-            productSearch.focus();
-        });
-
-        cancelItemBtn.addEventListener('click', () => {
-            resetItemForm();
-            addItemForm.style.display = 'none';
-        });
-
-        confirmItemBtn.addEventListener('click', addItem);
-
-        productSearch.addEventListener('input', () => {
-            searchProducts(productSearch.value);
-        });
-
-        productSearch.addEventListener('focus', () => {
-            if (productSearch.value) {
-                searchProducts(productSearch.value);
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!productSearchResults.contains(e.target) && e.target !== productSearch) {
-                productSearchResults.style.display = 'none';
-            }
-        });
-
-        productQuantity.addEventListener('input', calculateItemTotal);
-        productPrice.addEventListener('input', calculateItemTotal);
-
-        clearFormBtn.addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja limpar o formulário? Todos os dados serão perdidos.')) {
-                clearForm();
-            }
-        });
-
-        previewBtn.addEventListener('click', previewEntry);
-        saveBtn.addEventListener('click', previewEntry);
-
-        closePreviewButton.addEventListener('click', () => {
-            previewPanel.classList.remove('open');
-        });
 
         entryTypeRadios.forEach(radio => {
             radio.addEventListener('change', toggleSupplierFields);
         });
 
-        // Initialize
+        // Inicialização
         toggleSupplierFields();
         renderItemsTable();
     </script>

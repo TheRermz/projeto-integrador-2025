@@ -16,15 +16,6 @@
       background-color: white;
     }
     
-    .window-header {
-      background-color: #e6e6e6;
-      border-bottom: 1px solid #cccccc;
-      padding: 4px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-    }
     
     .window-title {
       flex-grow: 1;
@@ -206,36 +197,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       const app = document.getElementById('app');
       
-      // Create window header
-      const windowHeader = document.createElement('div');
-      windowHeader.className = 'window-header';
-      
-      const windowTitle = document.createElement('div');
-      windowTitle.className = 'window-title';
-      windowTitle.textContent = 'KLOAD - Versão: 0.1 - Código Cliente:  - ESCRITORIO:';
-      
-      const windowControls = document.createElement('div');
-      windowControls.className = 'window-controls';
-      
-      const minimizeBtn = document.createElement('div');
-      minimizeBtn.className = 'window-control';
-      minimizeBtn.innerHTML = '&#8212;';
-      
-      const maximizeBtn = document.createElement('div');
-      maximizeBtn.className = 'window-control';
-      maximizeBtn.innerHTML = '&#9744;';
-      
-      const closeBtn = document.createElement('div');
-      closeBtn.className = 'window-control';
-      closeBtn.innerHTML = '&#10005;';
-      
-      windowControls.appendChild(minimizeBtn);
-      windowControls.appendChild(maximizeBtn);
-      windowControls.appendChild(closeBtn);
-      
-      windowHeader.appendChild(windowTitle);
-      windowHeader.appendChild(windowControls);
-      
       // Create navigation header
       const navHeader = document.createElement('div');
       navHeader.className = 'nav-header';
@@ -309,10 +270,10 @@
       modulesGrid.className = 'modules-grid';
       
       const modules = [
-        { icon: '🧑‍💼', label: 'Cargos' },
+        { icon: '📦', label: 'Entrda de Produto/Insumos' },
         { icon: '👔', label: 'Funcionários' },
-        { icon: '📦', label: 'Produto' },
-        { icon: '👤', label: 'Cliente' },
+        { icon: '🎚️', label: 'Maquinas' },
+        { icon: '🧑‍💼', label: 'Cargos' },
         { icon: '⬅️', label: 'Recebimento' },
         { icon: '📦', label: 'Consulta Estoque' }
       ];
@@ -346,6 +307,18 @@
           });
         }
 
+        if (module.label === 'Maquinas') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Maquinas.html';
+          });
+        }
+
+        if (module.label === 'Entrda de Produto/Insumos') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'entradaProdutosInsumos.html';
+          });
+        }
+
         modulesGrid.appendChild(moduleElement);
       });
       
@@ -363,18 +336,13 @@
       supportInfo.className = 'support-info';
       
       const supportHours1 = document.createElement('div');
-
       const supportHours2 = document.createElement('div');
       
-      const chatSupport = document.createElement('div');
-      chatSupport.innerHTML = '<strong>Chat:</strong> Clique aqui!<br>E-mail: kload@system.com.br';
-      
       const versionInfo = document.createElement('div');
-      versionInfo.innerHTML = '<strong>Novidades da Versão 3.51</strong><br>Clique aqui!';
+      versionInfo.innerHTML = '<strong> Versão 1.05.</strong>';
       
       supportInfo.appendChild(supportHours1);
       supportInfo.appendChild(supportHours2);
-      supportInfo.appendChild(chatSupport);
       
       const companyLogo = document.createElement('div');
       companyLogo.style.fontWeight = 'bold';
@@ -388,10 +356,16 @@
       // Create status bar
       const statusBar = document.createElement('div');
       statusBar.className = 'status-bar';
-      statusBar.innerHTML = 'Loja:  | Data:  | Nome do Computador:  | IP:  | Usuário:  | Operador:  | Atendimento: ';
+      // Atualiza status bar para mostrar email e data
+      function updateStatusBar() {
+        const userEmail = localStorage.getItem('userEmail') || '';
+        const now = new Date();
+        statusBar.innerHTML = `Data: ${now.toLocaleString('pt-BR')} | Usuário: ${userEmail} |`;
+      }
+      updateStatusBar();
+      setInterval(updateStatusBar, 1000);
       
       // Append all elements to the app
-      app.appendChild(windowHeader);
       app.appendChild(navHeader);
       app.appendChild(mainContent);
       app.appendChild(footer);

@@ -65,7 +65,10 @@
         padding: 16px;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+        z-index: 0;
         background-color: #005599;
       }
 
@@ -128,10 +131,12 @@
 
       /* Form Section */
       .form-section {
-        background-color: #003366;
-        border-radius: 4px;
-        border: 1px solid #0066aa;
-        overflow: hidden;
+      background-color: #003366;
+      border-radius: 4px;
+      border: 1px solid #0066aa;
+      position: relative;
+      overflow: visible; 
+      z-index: 0;
       }
 
       .section-header {
@@ -159,6 +164,7 @@
       .form-group {
         flex: 1;
         min-width: 200px;
+        position: relative;
       }
 
       .form-group label {
@@ -348,18 +354,24 @@
         position: relative;
       }
 
-      .product-search-results {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: #001a33;
-        border: 1px solid #0066aa;
-        border-radius: 0 0 4px 4px;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 10;
-      }
+        /* === Estilos para os dropdowns globais === */
+        .product-search-results,
+        .insumo-search-results {
+          position: absolute;          /* Posicionamento absoluto no viewport */
+          z-index: 9999;               /* Fica acima de tudo */
+          background-color: #001a33;   /* Cor de fundo */
+          border: 1px solid #0066aa;   /* Borda azul */
+          border-radius: 0 0 4px 4px;  /* Cantos arredondados na parte inferior */
+          max-height: 200px;           /* Altura máxima (com scroll interno) */
+          overflow-y: auto;            /* Scroll vertical interno */
+          box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Sombra para “flutuar” */
+        }
+
+        /* Apenas para reforçar: o contêiner .form-group não precisa de overflow: hidden */
+        .form-group {
+          position: relative;
+          z-index: 1;
+        }
 
       .product-search-item {
         padding: 8px;
@@ -585,6 +597,30 @@
         font-size: 12px;
       }
 
+
+
+        .form-section {
+          position: relative;
+          z-index: 1;
+        }
+
+        .form-group {
+          position: relative;
+          z-index: 2;
+        }
+
+
+      .form-group {
+        position: relative;
+        z-index: 10;
+      }
+
+.wrapper-autocomplete {
+  position: relative;
+  z-index: 9999;
+}
+
+
       /* Responsive adjustments */
       @media (max-width: 768px) {
         .content-layout {
@@ -610,6 +646,8 @@
         .form-group {
           min-width: 100%;
         }
+
+
       }
     </style>
   </head>
@@ -663,14 +701,10 @@
               <div class="section-content" id="listaMateriais-section">
                 <!-- Campos dinâmicos para listaMateriais -->
                 <div class="form-row material-row">
-                  <div class="form-group">
-                    <label>Nome do Componente</label>
-                    <input
-                      type="text"
-                      class="listaMateriais-nomeComponente"
-                      required
-                    />
-                  </div>
+                <div class="form-group wrapper-autocomplete">
+                  <label>Nome do Componente</label>
+                  <input type="text" class="listaMateriais-nomeComponente" required />
+                </div>
                   <div class="form-group">
                     <label>Qtd. Unidade</label>
                     <input
@@ -866,47 +900,222 @@
     <script>
       const API_URL = "https://localhost:5001";
 
-      // Funções para adicionar/remover linhas dinâmicas
-      function addRow(sectionId, rowClass) {
-        const section = document.getElementById(sectionId);
-        const rows = section.querySelectorAll(`.${rowClass}`);
-        const lastRow = rows[rows.length - 1];
-        const newRow = lastRow.cloneNode(true);
+      // Função para criar uma nova linha dinâmica para cada seção
+      function createRow(sectionId, rowClass, fields) {
+        const row = document.createElement('div');
+        row.className = `form-row ${rowClass}`;
+        fields.forEach(f => {
+          const group = document.createElement('div');
+          group.className = 'form-group';
+          const label = document.createElement('label');
+          label.textContent = f.label;
+          group.appendChild(label);
+          let input;
+          if (f.type === 'select') {
+            input = document.createElement('select');
+            input.className = f.className;
+            f.options.forEach(opt => {
+              const option = document.createElement('option');
+              option.value = opt.value;
+              option.textContent = opt.label;
+              input.appendChild(option);
+            });
+          } else if (f.type === 'textarea') {
+            input = document.createElement('textarea');
+            input.className = f.className;
+          } else {
+            input = document.createElement('input');
+            input.type = f.type || 'text';
+            input.className = f.className;
+            if (f.min !== undefined) input.min = f.min;
+            if (f.step !== undefined) input.step = f.step;
+          }
+          group.appendChild(input);
+          row.appendChild(group);
+        });
 
-        // Limpa os valores dos inputs clonados
-        newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
+        // Botão de remover linha
+        const actions = document.createElement('div');
+        actions.className = 'form-group form-actions';
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-danger remove-btn';
+        removeBtn.textContent = '-';
+        removeBtn.onclick = function () {
+          const section = document.getElementById(sectionId);
+          // Só remove se houver mais de uma linha
+          if (section.querySelectorAll(`.${rowClass}`).length > 1) {
+            row.remove();
+          }
+        };
+        actions.appendChild(removeBtn);
+        row.appendChild(actions);
 
-        // Adiciona botão de remover se ainda não existir
-        let removeBtn = newRow.querySelector(".remove-btn");
-        if (!removeBtn) {
-          removeBtn = document.createElement("button");
-          removeBtn.type = "button";
-          removeBtn.className = "btn btn-danger remove-btn";
-          removeBtn.textContent = "-";
-          removeBtn.onclick = function () {
-            if (section.querySelectorAll(`.${rowClass}`).length > 1) {
-              newRow.remove();
-            }
-          };
-          newRow.querySelector(".form-actions").appendChild(removeBtn);
-        }
-
-        section.appendChild(newRow);
+        return row;
       }
 
-      // Adiciona eventos aos botões de adicionar linha
+      // Função para adicionar uma linha dinâmica
+      function addRow(sectionId, rowClass, fields) {
+        const section = document.getElementById(sectionId);
+        const row = createRow(sectionId, rowClass, fields);
+        section.appendChild(row);
+      }
+
+      // Inicializa as seções dinâmicas e os botões de adicionar
       document.addEventListener("DOMContentLoaded", () => {
-        document.querySelector(".add-material-btn").onclick = () =>
-          addRow("listaMateriais-section", "material-row");
-        document.querySelector(".add-estoque-btn").onclick = () =>
-          addRow("estoqueAtual-section", "estoque-row");
-        document.querySelector(".add-pedido-btn").onclick = () =>
-          addRow("pedidosAbertos-section", "pedido-row");
-        document.querySelector(".add-leadtime-btn").onclick = () =>
-          addRow("leadTimes-section", "leadtime-row");
-        document.querySelector(".add-recurso-btn").onclick = () =>
-          addRow("recursosProducao-section", "recurso-row");
+        // Definição dos campos de cada seção
+        const sections = [
+          {
+            sectionId: "listaMateriais-section",
+            rowClass: "material-row",
+            fields: [
+              { label: "Nome do Componente", className: "listaMateriais-nomeComponente", type: "text" },
+              { label: "Qtd/Unidade", className: "listaMateriais-qntdUnidade", type: "number", min: 0, step: 1 }
+            ],
+            addBtnClass: "add-material-btn"
+          },
+          {
+            sectionId: "estoqueAtual-section",
+            rowClass: "estoque-row",
+            fields: [
+              { label: "Nome do Produto", className: "estoqueAtual-nomeProduto", type: "text" },
+              { label: "Qtd Disponível", className: "estoqueAtual-qntdDisponivel", type: "number", min: 0, step: 1 }
+            ],
+            addBtnClass: "add-estoque-btn"
+          },
+          {
+            sectionId: "pedidosAbertos-section",
+            rowClass: "pedido-row",
+            fields: [
+              { label: "Nome do Item", className: "pedidosAbertos-nomeItem", type: "text" },
+              { label: "Qtd Pedida", className: "pedidosAbertos-qntdPedida", type: "number", min: 0, step: 1 },
+              { label: "Data Entrega", className: "pedidosAbertos-dataEntrega", type: "date" }
+            ],
+            addBtnClass: "add-pedido-btn"
+          },
+          {
+            sectionId: "leadTimes-section",
+            rowClass: "leadtime-row",
+            fields: [
+              { label: "Nome do Item", className: "leadTimes-nomeItem", type: "text" },
+              { label: "Tempo de Reposição (dias)", className: "leadTimes-tempoReposicao", type: "number", min: 0, step: 1 }
+            ],
+            addBtnClass: "add-leadtime-btn"
+          },
+          {
+            sectionId: "recursosProducao-section",
+            rowClass: "recurso-row",
+            fields: [
+              { label: "Nome da Operação", className: "recursosProducao-nomeOperacao", type: "text" },
+              { label: "Tempo por Unidade (min)", className: "recursosProducao-tempoPorUnidadeMin", type: "number", min: 0, step: 1 },
+              { label: "Recursos Disponíveis", className: "recursosProducao-recursosDisponiveis", type: "number", min: 0, step: 1 },
+              { label: "Horas por Dia", className: "recursosProducao-horasPorDia", type: "number", min: 0, step: 1 }
+            ],
+            addBtnClass: "add-recurso-btn"
+          }
+        ];
+
+        // Inicializa cada seção com uma linha e botão de adicionar
+        sections.forEach(sec => {
+          const section = document.getElementById(sec.sectionId);
+          section.innerHTML = '';
+          section.appendChild(createRow(sec.sectionId, sec.rowClass, sec.fields));
+
+          // Cria botão de adicionar
+          let addBtn = document.createElement('button');
+          addBtn.type = 'button';
+          addBtn.className = `btn btn-primary ${sec.addBtnClass}`;
+          addBtn.textContent = '+';
+          addBtn.onclick = () => addRow(sec.sectionId, sec.rowClass, sec.fields);
+
+          // Adiciona o botão após a seção
+          section.parentNode.appendChild(addBtn);
+        });
+
+        // Produto Final (campos fixos)
+        const produtoFinalSection = document.querySelector('.section-content');
+        if (produtoFinalSection && produtoFinalSection.parentNode.previousElementSibling && produtoFinalSection.parentNode.previousElementSibling.textContent.includes('Produto Final')) {
+          produtoFinalSection.innerHTML = `
+            <div class="form-row">
+              <div class="form-group">
+                <label for="produtoFinal-nomeProduto">Nome do Produto</label>
+                <input type="text" id="produtoFinal-nomeProduto" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label for="produtoFinal-qntdProduzida">Qtd a Produzir</label>
+                <input type="number" id="produtoFinal-qntdProduzida" class="form-input" min="1" required>
+              </div>
+              <div class="form-group">
+                <label for="produtoFinal-dataEntrega">Data de Entrega</label>
+                <input type="date" id="produtoFinal-dataEntrega" class="form-input" required>
+              </div>
+            </div>
+          `;
+        }
+
+        // Inicializa autocomplete
+        setupAutocompleteProduto();
+        setupAutocompleteInsumo(".listaMateriais-nomeComponente");
+        setupAutocompleteInsumo(".estoqueAtual-nomeProduto");
       });
+
+    
+
+      // Adiciona eventos aos botões de adicionar linha
+        document.addEventListener("DOMContentLoaded", () => {
+          const sectionConfigs = {
+            "listaMateriais-section": {
+              rowClass: "material-row",
+              fields: [
+                { label: "Nome do Componente", className: "listaMateriais-nomeComponente", type: "text" },
+                { label: "Qtd/Unidade", className: "listaMateriais-qntdUnidade", type: "number", min: 0, step: 1 }
+              ]
+            },
+            "estoqueAtual-section": {
+              rowClass: "estoque-row",
+              fields: [
+                { label: "Nome do Produto", className: "estoqueAtual-nomeProduto", type: "text" },
+                { label: "Qtd Disponível", className: "estoqueAtual-qntdDisponivel", type: "number", min: 0, step: 1 }
+              ]
+            },
+            "pedidosAbertos-section": {
+              rowClass: "pedido-row",
+              fields: [
+                { label: "Nome do Item", className: "pedidosAbertos-nomeItem", type: "text" },
+                { label: "Qtd Pedida", className: "pedidosAbertos-qntdPedida", type: "number", min: 0, step: 1 },
+                { label: "Data Entrega", className: "pedidosAbertos-dataEntrega", type: "date" }
+              ]
+            },
+            "leadTimes-section": {
+              rowClass: "leadtime-row",
+              fields: [
+                { label: "Nome do Item", className: "leadTimes-nomeItem", type: "text" },
+                { label: "Tempo de Reposição (dias)", className: "leadTimes-tempoReposicao", type: "number", min: 0, step: 1 }
+              ]
+            },
+            "recursosProducao-section": {
+              rowClass: "recurso-row",
+              fields: [
+                { label: "Nome da Operação", className: "recursosProducao-nomeOperacao", type: "text" },
+                { label: "Tempo por Unidade (min)", className: "recursosProducao-tempoPorUnidadeMin", type: "number", min: 0, step: 1 },
+                { label: "Recursos Disponíveis", className: "recursosProducao-recursosDisponiveis", type: "number", min: 0, step: 1 },
+                { label: "Horas por Dia", className: "recursosProducao-horasPorDia", type: "number", min: 0, step: 1 }
+              ]
+            }
+          };
+
+          Object.entries(sectionConfigs).forEach(([sectionId, config]) => {
+            const btnClass = sectionId
+              .replace("-section", "")
+              .replace(/([A-Z])/g, "-$1")
+              .toLowerCase();
+            document.querySelectorAll(`.add-${btnClass}-btn`).forEach(btn => {
+              btn.addEventListener("click", () => {
+                addRow(sectionId, config.rowClass, config.fields);
+              });
+            });
+          });
+        });
 
       // Função para coletar dados do formulário dinâmico
       function collectRows(sectionId, rowClass, fields) {
@@ -949,7 +1158,7 @@
                 name: "nomeComponente",
                 selector: ".listaMateriais-nomeComponente",
               },
-              { name: "qntdUnidade", selector: ".listaMateriais-qntdUnidade" },
+              { name: "qtndUnidade", selector: ".listaMateriais-qntdUnidade" },
             ]
           );
 
@@ -1099,54 +1308,60 @@
       // Cria o autocomplete
       function setupAutocompleteProduto() {
         const input = document.getElementById("produtoFinal-nomeProduto");
-        let resultsBox = document.createElement("div");
-        resultsBox.className = "product-search-results";
-        resultsBox.style.position = "absolute";
-        resultsBox.style.zIndex = "1000";
-        input.parentNode.style.position = "relative";
-        input.parentNode.appendChild(resultsBox);
+          // Cria o dropdown mas NÃO dentro de input.parentNode:
+          const resultsBox = document.createElement("div");
+          resultsBox.className = "product-search-results";
+          resultsBox.style.position = "absolute";
+          resultsBox.style.zIndex = "9999";
+          resultsBox.style.display = "none";
+          // Anexa direto no body (dentro do nosso contêiner global):
+          const container = document.getElementById("global-dropdown-container");
+          container.appendChild(resultsBox);
 
-        input.addEventListener("input", async function () {
-          const termo = input.value;
-          if (termo.length < 2) {
-            resultsBox.innerHTML = "";
-            resultsBox.style.display = "none";
-            return;
-          }
-          const produtos = await buscarProdutos(termo);
-          if (produtos.length === 0) {
-            resultsBox.innerHTML =
-              "<div class='product-search-item'>Nenhum produto encontrado</div>";
+          input.addEventListener("input", async function () {
+            const termo = input.value;
+            if (termo.length < 2) {
+              resultsBox.innerHTML = "";
+              resultsBox.style.display = "none";
+              return;
+            }
+
+            // Chama a sua API de produtos
+            const produtos = await buscarProdutos(termo);
+            if (!produtos || produtos.length === 0) {
+              resultsBox.innerHTML = "<div class='product-search-item'>Nenhum produto encontrado</div>";
+            } else {
+              resultsBox.innerHTML = produtos
+                .map(p => `<div class="product-search-item" data-nome="${p.nome}">${p.nome}</div>`)
+                .join("");
+            }
+
+            // Posiciona o dropdown logo abaixo do input
+            const rect = input.getBoundingClientRect();
+            resultsBox.style.left = `${rect.left + window.scrollX}px`;
+            resultsBox.style.top = `${rect.bottom + window.scrollY}px`;
+            resultsBox.style.width = `${rect.width}px`;
             resultsBox.style.display = "block";
-            return;
-          }
-          resultsBox.innerHTML = produtos
-            .map(
-              (p) =>
-                `<div class="product-search-item" data-nome="${p.nome}">${p.nome}</div>`
-            )
-            .join("");
-          resultsBox.style.display = "block";
-          // Clique em uma sugestão
-          resultsBox
-            .querySelectorAll(".product-search-item")
-            .forEach((item) => {
-              item.onclick = function () {
+
+            // Adiciona evento de clique em cada item
+            resultsBox.querySelectorAll(".product-search-item").forEach(item => {
+              item.addEventListener("click", function () {
                 input.value = item.getAttribute("data-nome");
                 resultsBox.innerHTML = "";
                 resultsBox.style.display = "none";
-              };
+              });
             });
-        });
+          });
 
-        // Esconde o autocomplete ao perder o foco
-        input.addEventListener("blur", function () {
-          setTimeout(() => {
-            resultsBox.innerHTML = "";
-            resultsBox.style.display = "none";
-          }, 200);
-        });
-      }
+          // Quando perder o foco, esconde o dropdown
+          input.addEventListener("blur", function () {
+            setTimeout(() => {
+              resultsBox.innerHTML = "";
+              resultsBox.style.display = "none";
+            }, 200);
+          });
+        }
+      
 
       async function buscarInsumos(filtro) {
         if (!filtro || filtro.length < 2) return [];
@@ -1162,89 +1377,85 @@
         document.addEventListener("input", async function (e) {
           if (!e.target.matches(inputSelector)) return;
           const input = e.target;
-          let resultsBox = input.parentNode.querySelector(
-            ".insumo-search-results"
-          );
+
+          let resultsBox = document.getElementById("insumo-results-" + input.id);
           if (!resultsBox) {
+            // Cria o dropdown mas não dentro do form
             resultsBox = document.createElement("div");
             resultsBox.className = "insumo-search-results";
             resultsBox.style.position = "absolute";
-            resultsBox.style.zIndex = "1000";
-            input.parentNode.style.position = "relative";
-            input.parentNode.appendChild(resultsBox);
+            resultsBox.style.zIndex = "9999";
+            resultsBox.style.display = "none";
+            // Dá a cada dropdown um ID único baseado no ID do input
+            resultsBox.id = "insumo-results-" + input.id;
+            document.getElementById("global-dropdown-container").appendChild(resultsBox);
           }
+
           const termo = input.value;
           if (termo.length < 2) {
             resultsBox.innerHTML = "";
             resultsBox.style.display = "none";
             return;
           }
+
+          // Chama a API de insumos
           const insumos = await buscarInsumos(termo);
-          if (insumos.length === 0) {
-            resultsBox.innerHTML =
-              "<div class='product-search-item'>Nenhum insumo encontrado</div>";
-            resultsBox.style.display = "block";
-            return;
+          if (!insumos || insumos.length === 0) {
+            resultsBox.innerHTML = "<div class='product-search-item'>Nenhum insumo encontrado</div>";
+          } else {
+            resultsBox.innerHTML = insumos
+              .map(i => `<div class="product-search-item" data-nome="${i.nome}" data-qtd="${i.qtdDisponivel ?? ""}">${i.nome} <span class="product-code">(${i.codigo})</span></div>`)
+              .join("");
           }
-          resultsBox.innerHTML = insumos
-            .map(
-              (i) =>
-                `<div class="product-search-item" data-nome="${
-                  i.nome
-                }" data-qtd="${i.qtdDisponivel ?? ""}">${
-                  i.nome
-                } <span class="product-code">(${i.codigo})</span></div>`
-            )
-            .join("");
+
+          // Posiciona o dropdown abaixo do input
+          const rect = input.getBoundingClientRect();
+          resultsBox.style.left = `${rect.left + window.scrollX}px`;
+          resultsBox.style.top = `${rect.bottom + window.scrollY}px`;
+          resultsBox.style.width = `${rect.width}px`;
           resultsBox.style.display = "block";
-          resultsBox
-            .querySelectorAll(".product-search-item")
-            .forEach((item) => {
-              item.onclick = function () {
-                input.value = item.getAttribute("data-nome");
-                resultsBox.innerHTML = "";
-                resultsBox.style.display = "none";
-                // Preencher qtd disponível se for campo de estoque
-                if (input.classList.contains("estoqueAtual-nomeProduto")) {
-                  const row = input.closest(".estoque-row");
-                  const qtdInput = row.querySelector(
-                    ".estoqueAtual-qntdDisponivel"
-                  );
-                  if (qtdInput && item.hasAttribute("data-qtd")) {
-                    qtdInput.value = item.getAttribute("data-qtd") || "";
-                    qtdInput.dispatchEvent(
-                      new Event("input", { bubbles: true })
-                    );
-                  }
+
+          // Clique em cada item: preenche o input e fecha dropdown
+          resultsBox.querySelectorAll(".product-search-item").forEach(item => {
+            item.addEventListener("click", function () {
+              input.value = item.getAttribute("data-nome");
+              // Se for campo de estoque, preenche qtd automaticamente
+              if (input.classList.contains("estoqueAtual-nomeProduto")) {
+                const row = input.closest(".estoque-row");
+                const qtdInput = row.querySelector(".estoqueAtual-qntdDisponivel");
+                if (qtdInput && item.hasAttribute("data-qtd")) {
+                  qtdInput.value = item.getAttribute("data-qtd") || "";
+                  qtdInput.dispatchEvent(new Event("input", { bubbles: true }));
                 }
-              };
+              }
+              resultsBox.innerHTML = "";
+              resultsBox.style.display = "none";
             });
+          });
         });
 
-        // Esconde o autocomplete ao perder o foco
-        document.addEventListener(
-          "blur",
-          function (e) {
-            if (!e.target.matches(inputSelector)) return;
-            const resultsBox = e.target.parentNode.querySelector(
-              ".insumo-search-results"
-            );
-            if (resultsBox) {
-              setTimeout(() => {
-                resultsBox.innerHTML = "";
-                resultsBox.style.display = "none";
-              }, 200);
-            }
-          },
-          true
-        );
+        // Quando o input perde o foco, fecha o dropdown
+        document.addEventListener("blur", function (e) {
+          if (!e.target.matches(inputSelector)) return;
+          const resultsBox = document.getElementById("insumo-results-" + e.target.id);
+          if (resultsBox) {
+            setTimeout(() => {
+              resultsBox.innerHTML = "";
+              resultsBox.style.display = "none";
+            }, 200);
+          }
+        }, true);
       }
+
 
       // Inicializa o autocomplete ao carregar a página
       document.addEventListener("DOMContentLoaded", function () {
+        setupAutocompleteProduto(); // <- Faltava essa linha
         setupAutocompleteInsumo(".listaMateriais-nomeComponente");
         setupAutocompleteInsumo(".estoqueAtual-nomeProduto");
       });
     </script>
+
+    <div id="global-dropdown-container"></div>
   </body>
 </html>

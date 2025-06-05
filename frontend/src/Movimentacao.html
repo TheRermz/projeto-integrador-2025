@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KLOAD - Movimentações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background-color: white; }
+    .nav-header { background-color: #3949ab; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .nav-container { display: flex; align-items: center; }
+    .logo { font-size: 24px; font-weight: bold; padding: 12px 0; margin-right: 32px; }
+    .nav-menu { display: flex; }
+    .nav-item { padding: 12px 16px; color: white; text-decoration: none; }
+    .nav-item:hover, .nav-item.active { background-color: #303f9f; }
+    .main-content { background-color: #005599; min-height: calc(100vh - 80px); padding: 20px; position: relative; }
+    .logo-container { position: absolute; top: 20px; right: 20px; text-align: right; }
+    .kload-logo { font-size: 48px; font-weight: bold; color: white; line-height: 1; }
+    .content-wrapper { max-width: 900px; margin: 0 auto; }
+    .page-title { color: white; font-size: 28px; font-weight: bold; margin-bottom: 30px; text-align: center; }
+    .section { background-color: #0066aa; border-radius: 8px; padding: 24px; margin-bottom: 20px; color: white; }
+    .section-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #3949ab; padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: bold; }
+    .form-input, .form-select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    .form-row { display: flex; gap: 20px; align-items: end; flex-wrap: wrap; }
+    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; margin-right: 10px; margin-bottom: 10px; }
+    .btn-primary { background-color: #3949ab; color: white; }
+    .btn-primary:hover { background-color: #303f9f; }
+    .btn-secondary { background-color: #757575; color: white; }
+    .btn-secondary:hover { background-color: #616161; }
+    .mensagem { margin-top: 20px; font-weight: bold; }
+    /* Adicione o estilo para infoItemSelecionado */
+    #infoItemSelecionado {
+      margin-top: 14px;
+      padding: 12px 18px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #3949ab 60%, #0066aa 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-left: 5px solid #ffb300;
+      transition: background 0.2s;
+      letter-spacing: 0.01em;
+      line-height: 1.5;
+      display: none;
+    }
+    #infoItemSelecionado:not(.hidden) {
+      display: block;
+    }
+    #infoItemSelecionado strong {
+      color: #ffe082;
+    }
+    #infoItemSelecionado .estoque {
+      color: #ffd54f;
+      font-weight: bold;
+    }
+    @media (max-width: 768px) {
+      .nav-menu { display: none; }
+      .support-info { flex-direction: column; gap: 4px; }
+      .footer-content { flex-direction: column; gap: 8px; }
+      .form-row { flex-direction: column; align-items: stretch; }
+      .content-wrapper { padding: 0; }
+    }
+    .footer {
+      background-color: #005599;
+      color: white;
+      padding: 8px 16px;
+      font-size: 12px;
+      border-top: 1px solid #0066aa;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-content strong {
+      font-size: 11px;
+      color: #e0e0e0;
+      background: #005599;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-weight: normal;
+      letter-spacing: 0.5px;
+    }
+    .support-info {
+      display: flex;
+      gap: 16px;
+    }
+    .status-bar {
+      background-color: #005599;
+      color: #e0e0e0;
+      padding: 2px 8px;
+      font-size: 11px;
+      display: flex;
+      gap: 16px;
+      min-height: 22px;
+      align-items: center;
+      border-top: 1px solid #0066aa;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <div class="container nav-container">
+      <div class="logo">KLOAD</div>
+      <div class="nav-menu" id="navMenu"></div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="logo-container">
+      <div class="kload-logo">KLOAD</div>
+    </div>
+    <div class="content-wrapper">
+      <h1 class="page-title">Registrar Movimentação</h1>
+      <div class="section">
+        <form id="movimentacaoForm">
+          <div class="form-row" style="flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1 1 200px; min-width: 180px;">
+              <label for="tipoMovimentacao" class="form-label">Tipo de Movimentação</label>
+              <select id="tipoMovimentacao" name="tipoMovimentacao" class="form-select" required>
+                <option value="">Selecione</option>
+                <option value="1">Entrada</option>
+                <option value="0">Saída</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1 1 200px; min-width: 180px;">
+              <label for="tipoItem" class="form-label">Item</label>
+              <select id="tipoItem" name="tipoItem" class="form-select" required>
+                <option value="">Selecione</option>
+                <option value="insumo">Insumo</option>
+                <option value="produto">Produto</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="itemId" class="form-label">Selecionar Item</label>
+            <select id="itemId" name="itemId" class="form-select" required>
+              <option value="">Carregando...</option>
+            </select>
+          </div>
+          <div id="infoItemSelecionado" class="hidden" style="margin-top: 10px; font-weight: bold; color: white;"></div>
+          <br>
+          <div class="form-row" style="flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1 1 200px; min-width: 180px;">
+              <label for="quantidade" class="form-label">Quantidade</label>
+              <input type="number" id="quantidade" name="quantidade" class="form-input" min="1" required>
+            </div>
+            <div class="form-group" style="flex: 1 1 200px; min-width: 180px;">
+              <label for="total" class="form-label">Total (R$)</label>
+              <input type="text" id="totalExibido" class="form-input" readonly>
+              <input type="hidden" id="total" name="total">
+            </div>
+          </div>
+          <div class="form-row" style="flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1 1 200px; min-width: 180px;">
+              <label for="dataMovimentacao" class="form-label">Data da Movimentação</label>
+              <input type="date" id="dataMovimentacao" name="dataMovimentacao" class="form-input" required readonly>
+            </div>
+            <div class="form-group" style="flex: 1 1 200px; min-width: 180px; display: none;">
+              <!-- Campo oculto para manter alinhamento -->
+            </div>
+          </div>
+          <div class="form-row" style="justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+            <button type="reset" class="btn btn-secondary">Limpar</button>
+          </div>
+        </form>
+        <div id="mensagem" class="mensagem"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-content">
+      <div class="support-info"></div>
+      <div>
+        <strong> Versão 1.05.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar" id="statusBar">
+    <!-- Conteúdo será preenchido via JS -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Menu dinâmico
+      const menuItems = [
+        { label: 'Início', href: 'PaginaInicialPrincipal.html' },
+        { label: 'Movimento', href: 'On-hold.html' },
+        { label: 'Relatórios', href: 'On-hold.html' },
+        { label: 'Controle', href: 'On-hold.html' },
+        { label: 'Inteligência', href: 'On-hold.html' },
+        { label: 'Configurações', href: 'GerenciamentoUsuarios.html' },
+        { label: 'Utilitários', href: 'On-hold.html' },
+        { label: 'Sobre', href: 'On-hold.html' }
+      ];
+      const navMenu = document.getElementById('navMenu');
+      navMenu.innerHTML = '';
+      menuItems.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.className = 'nav-item';
+        if (window.location.pathname.endsWith(item.href)) a.classList.add('active');
+        a.textContent = item.label;
+        navMenu.appendChild(a);
+      });
+
+      const hoje = new Date().toISOString().split('T')[0];
+      document.getElementById('dataMovimentacao').value = hoje;
+      // Botão de logout
+      const navContainer = document.querySelector('.nav-container');
+      const logoutButton = document.createElement('button');
+      logoutButton.textContent = '🚪 Sair';
+      logoutButton.style.background = '#3949ab';
+      logoutButton.style.color = 'white';
+      logoutButton.style.border = 'none';
+      logoutButton.style.padding = '8px 12px';
+      logoutButton.style.marginLeft = '16px';
+      logoutButton.style.borderRadius = '4px';
+      logoutButton.style.cursor = 'pointer';
+      logoutButton.style.fontWeight = 'bold';
+      logoutButton.style.fontSize = '12px';
+      logoutButton.onclick = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'TelaLogin.html';
+      };
+      navContainer.appendChild(logoutButton);
+
+      // Atualiza status bar com email e data
+      function updateStatusBar() {
+        const statusBar = document.getElementById('statusBar');
+        const userEmail = localStorage.getItem('userEmail') || '';
+        const now = new Date();
+        statusBar.innerHTML = `Data: ${now.toLocaleString('pt-BR')} | Usuário: ${userEmail} |`;
+      }
+      updateStatusBar();
+      setInterval(updateStatusBar, 1000);
+
+      document.getElementById('quantidade').addEventListener('input', () => {
+        const qtd = parseFloat(document.getElementById('quantidade').value);
+        const custo = window.itemCustoAtual || 0;
+        if (!isNaN(qtd)) {
+          document.getElementById('total').value = (qtd * custo).toFixed(2);
+        } else {
+          document.getElementById('total').value = '';
+        }
+      });
+
+      // Script básico para carregar insumos/produtos
+      const tipoItemSelect = document.getElementById('tipoItem');
+      tipoItemSelect.addEventListener('change', async () => {
+        const tipo = tipoItemSelect.value;
+        const itemSelect = document.getElementById('itemId');
+        itemSelect.innerHTML = '<option value="">Carregando...</option>';
+
+        let url = '';
+        if (tipo === 'insumo') {
+          url = 'https://localhost:5001/Insumos/Consulta';
+        } else if (tipo === 'produto') {
+          url = 'https://localhost:5001/Produtos/Consulta';
+        } else {
+          itemSelect.innerHTML = '<option value="">Selecione um tipo primeiro</option>';
+          return;
+        }
+
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error('Erro ao buscar itens');
+          const itens = await response.json();
+
+          if (!Array.isArray(itens) || itens.length === 0) {
+            itemSelect.innerHTML = '<option value="">Nenhum item encontrado</option>';
+            return;
+          }
+
+          itemSelect.innerHTML = '<option value="">Selecione</option>';
+          itens.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = `${item.id} - ${item.nome}`;
+            itemSelect.appendChild(option);
+          });
+        } catch (err) {
+          console.error(err);
+          itemSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+        }
+      });
+      const itemIdSelect = document.getElementById('itemId');
+
+        itemIdSelect.addEventListener('change', async () => {
+        const idSelecionado = itemIdSelect.value;
+        const tipoSelect = document.getElementById('tipoItem');
+        const tipoMovimentacaoSelect = document.getElementById('tipoMovimentacao');
+        const tipo = tipoMovimentacaoSelect.value;
+        const info = document.getElementById('infoItemSelecionado');
+        const quantidadeInput = document.getElementById('quantidade');
+
+        if (!idSelecionado) {
+            quantidadeInput.disabled = true;
+            quantidadeInput.placeholder = '';
+            quantidadeInput.removeAttribute('max');
+            info.classList.add('hidden');
+            info.textContent = '';
+            return;
+        }
+
+        let endpoint = tipoSelect.value === 'insumo' ? `https://localhost:5001/Insumos/Consulta/${idSelecionado}` : `https://localhost:5001/Produtos/Consulta/${idSelecionado}`;
+
+        try {
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            const estoqueAtual = data.qntd ?? 0;
+            const nome = data.nome ?? 'Item';
+
+            quantidadeInput.disabled = false;
+            // Guardar o custo do item selecionado
+            window.itemCustoAtual = parseFloat(data.custo) || 0;
+            const quantidadeAtual = parseFloat(quantidadeInput.value);
+            if (!isNaN(quantidadeAtual)) {
+              atualizarTotal(window.itemCustoAtual, quantidadeAtual);
+            }
+            // Atualizar o total se já tiver quantidade preenchida
+            document.getElementById('quantidade').addEventListener('input', () => {
+              const qtd = parseFloat(document.getElementById('quantidade').value);
+              if (!isNaN(qtd)) {
+                atualizarTotal(window.itemCustoAtual || 0, qtd);
+              }
+            });
+
+            if (tipoMovimentacaoSelect.value === 'saida') {
+              quantidadeInput.max = estoqueAtual;
+              info.innerHTML = `Você está realizando uma <strong>saída</strong> de <strong>${nome}</strong>. Estoque disponível: <span class="estoque">${estoqueAtual} unidades</span>`;
+            } else {
+              quantidadeInput.removeAttribute('max');
+              info.innerHTML = `Você está realizando uma <strong>entrada</strong> de <strong>${nome}</strong>. Estoque atual: <span class="estoque">${estoqueAtual} unidades</span>`;
+            }
+
+            info.classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            info.innerHTML = 'Erro ao buscar o item selecionado.';
+            info.classList.remove('hidden');
+        }
+        });
+
+      document.getElementById('movimentacaoForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const tipo = document.getElementById('tipoItem').value;
+        const isProduto = tipo === 'produto';
+        const tipoBit = parseInt(document.getElementById('tipoMovimentacao').value);
+        const payload = {
+          [`id_${isProduto ? 'Produto' : 'Insumo'}`]: parseInt(document.getElementById('itemId').value),
+          codigo: 'MOV-' + Date.now(),
+          qntd: parseInt(document.getElementById('quantidade').value),
+          total: parseFloat(document.getElementById('total').value),
+          data_Movimentacao: document.getElementById('dataMovimentacao').value,
+          tipo_Movimentacao: tipoBit === 1
+        };
+        if (isProduto) {
+          payload.id_Venda = null;
+          payload.id_Producao = null;
+        } else {
+          payload.id_Compra = null;
+          payload.id_Producao = null;
+        }
+        console.log("Enviando para API:", payload);
+        try {
+         const res = await fetch(`https://localhost:5001/api/Movimentacao/${tipo}/cadastrar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+          const msg = document.getElementById('mensagem');
+          if (res.ok) {
+            msg.textContent = 'Movimentação registrada com sucesso!';
+            msg.style.color = 'green';
+          } else {
+            msg.textContent = 'Erro ao registrar movimentação.';
+            msg.style.color = 'red';
+          }
+        } catch {
+          alert('Erro de conexão com a API.');
+        }
+      });
+    });
+    function atualizarTotal(custoUnitario, quantidade) {
+  const total = (quantidade * custoUnitario);
+  
+  // Exibição para o usuário com vírgula
+  document.getElementById('totalExibido').value = total.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  // Envio para o backend com ponto (formato en-US)
+  document.getElementById('total').value = total.toFixed(2); // ex: 1234.50
+  }
+
+  </script>
+</body>
+</html>

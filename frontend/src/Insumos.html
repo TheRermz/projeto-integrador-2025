@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLOAD - Gerenciamento de Insumos</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background-color: white; }
+    .nav-header { background-color: #3949ab; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .nav-container { display: flex; align-items: center; }
+    .logo { font-size: 24px; font-weight: bold; padding: 12px 0; margin-right: 32px; }
+    .nav-menu { display: flex; }
+    .nav-item { padding: 12px 16px; color: white; text-decoration: none; }
+    .nav-item:hover, .nav-item.active { background-color: #303f9f; }
+    .main-content { background-color: #005599; min-height: calc(100vh - 80px); padding: 20px; position: relative; }
+    .logo-container { position: absolute; top: 20px; right: 20px; text-align: right; }
+    .kload-logo { font-size: 48px; font-weight: bold; color: white; line-height: 1; }
+    .content-wrapper { max-width: 1200px; margin: 0 auto; }
+    .page-title { color: white; font-size: 28px; font-weight: bold; margin-bottom: 30px; text-align: center; }
+    .section { background-color: #0066aa; border-radius: 8px; padding: 24px; margin-bottom: 20px; color: white; }
+    .section-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #3949ab; padding-bottom: 8px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: bold; }
+    .form-input, .form-select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    .form-row { display: flex; gap: 20px; align-items: end; flex-wrap: wrap; }
+    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; margin-right: 10px; margin-bottom: 10px; }
+    .btn-primary { background-color: #3949ab; color: white; }
+    .btn-primary:hover { background-color: #303f9f; }
+    .btn-secondary { background-color: #757575; color: white; }
+    .btn-secondary:hover { background-color: #616161; }
+    .table-container { overflow-x: auto; margin-top: 20px; }
+    .table { width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden; font-size: 12px; }
+    .table th, .table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color: #333; }
+    .table th { background-color: #f5f5f5; font-weight: bold; font-size: 11px; }
+    .table tr:hover { background-color: #f9f9f9; }
+    .empty-state { text-align: center; padding: 40px; color: #ccc; font-style: italic; }
+    .footer { background-color: #005599; color: white; padding: 8px 16px; font-size: 12px; border-top: 1px solid #0066aa; }
+    .footer-content { display: flex; justify-content: space-between; align-items: center; }
+    .support-info { display: flex; gap: 16px; }
+    .alert { padding: 12px; border-radius: 4px; margin-bottom: 20px; }
+    .alert-success { background-color: #4caf50; color: white; }
+    .alert-error { background-color: #f44336; color: white; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      .nav-menu { display: none; }
+      .support-info { flex-direction: column; gap: 4px; }
+      .footer-content { flex-direction: column; gap: 8px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-row { flex-direction: column; align-items: stretch; }
+      .table { font-size: 10px; }
+      .table th, .table td { padding: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <div class="container nav-container">
+      <div class="logo">KLOAD</div>
+      <div class="nav-menu" id="navMenu"></div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="logo-container">
+      <div class="kload-logo">KLOAD</div>
+    </div>
+    
+    <div class="content-wrapper">
+      <h1 class="page-title">Gerenciamento de Insumos</h1>
+      
+      <!-- Alert Messages -->
+      <div id="alertContainer"></div>
+      
+      <!-- Add Insumo Section -->
+      <div class="section">
+        <h2 class="section-title">Registrar Novo Insumo</h2>
+        <form id="insumoForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nome" class="form-label">Nome</label>
+              <input type="text" id="nome" name="nome" class="form-input" placeholder="Digite o nome" required>
+            </div>
+            <div class="form-group">
+              <label for="tipo" class="form-label">Tipo</label>
+              <input type="text" id="tipo" name="tipo" class="form-input" placeholder="Ex: Matéria-prima, Embalagem..." required>
+            </div>
+            <div class="form-group">
+              <label for="codigo" class="form-label">Código</label>
+              <input type="text" id="codigo" name="codigo" class="form-input" placeholder="Digite o código" required>
+            </div>
+            <div class="form-group">
+              <label for="custo" class="form-label">Custo (R$)</label>
+              <input type="number" id="custo" name="custo" class="form-input" placeholder="0,00" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="qntd" class="form-label">Quantidade</label>
+              <input type="number" id="qntd" name="qntd" class="form-input" placeholder="Quantidade inicial" min="0">
+            </div>
+            <div class="form-group">
+              <label for="id_fornecedor" class="form-label">Fornecedor</label>
+              <select id="id_fornecedor" name="id_fornecedor" class="form-select" required>
+                <option value="">Selecione um fornecedor</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <button type="submit" class="btn btn-primary">Registrar Insumo</button>
+            <button type="button" class="btn btn-secondary" id="clearForm">Limpar Formulário</button>
+          </div>
+        </form>
+      </div>
+      
+        <!-- Consulta por ID -->
+        <div class="section">
+        <h2 class="section-title">Buscar Insumo por ID</h2>
+        <form id="consultaPorIdForm" class="form-row">
+            <input type="number" id="consultaId" class="form-input" placeholder="Digite o ID do insumo" required style="max-width: 200px;">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="button" class="btn btn-secondary" id="limparBuscaPorId">Limpar</button>
+        </form>
+        </div>
+      
+      
+      <!-- Insumo List Section -->
+      <div class="section">
+        <h2 class="section-title">Lista de Insumos</h2>
+        <div class="table-container">
+          <table class="table" id="insumoTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Código</th>
+                <th>Custo</th>
+                <th>Quantidade</th>
+                <th>Fornecedor</th>
+              </tr>
+            </thead>
+            <tbody id="insumoTableBody">
+              <!-- Insumos serão inseridos aqui -->
+            </tbody>
+          </table>
+          <div id="emptyState" class="empty-state hidden">
+            <p>Nenhum insumo cadastrado. Registre o primeiro insumo usando o formulário acima.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-content">
+      <div class="support-info"></div>
+      <div>
+        <strong> Versão 1.05.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div id="statusBar" style="position: fixed; bottom: 0; left: 0; right: 0; height: 24px; background-color: #3949ab; color: white; display: flex; align-items: center; padding: 0 16px; font-size: 12px;">
+    <!-- Texto da barra de status -->
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Menu dinâmico
+      const menuItems = [
+        { label: 'Início', href: 'PaginaInicialPrincipal.html' },
+        { label: 'Movimento', href: 'On-hold.html' },
+        { label: 'Relatórios', href: 'On-hold.html' },
+        { label: 'Controle', href: 'On-hold.html' },
+        { label: 'Inteligência', href: 'On-hold.html' },
+        { label: 'Configurações', href: 'GerenciamentoUsuarios.html' },
+        { label: 'Utilitários', href: 'On-hold.html' },
+        { label: 'Sobre', href: 'On-hold.html' }
+      ];
+      const navMenu = document.getElementById('navMenu');
+      navMenu.innerHTML = '';
+      menuItems.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.className = 'nav-item';
+        if (window.location.pathname.endsWith(item.href)) a.classList.add('active');
+        a.textContent = item.label;
+        navMenu.appendChild(a);
+      });
+
+      const navContainer = document.querySelector('.nav-container');
+      // Botão de logout
+      const logoutButton = document.createElement('button');
+      logoutButton.textContent = '🚪 Sair';
+      logoutButton.style.background = '#3949ab';
+      logoutButton.style.color = 'white';
+      logoutButton.style.border = 'none';
+      logoutButton.style.padding = '8px 12px';
+      logoutButton.style.marginLeft = '16px';
+      logoutButton.style.borderRadius = '4px';
+      logoutButton.style.cursor = 'pointer';
+      logoutButton.style.fontWeight = 'bold';
+      logoutButton.style.fontSize = '12px';
+      logoutButton.onclick = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'TelaLogin.html';
+      };
+      navContainer.appendChild(logoutButton);
+    });
+
+    class InsumoManager {
+      constructor() {
+        this.insumos = [];
+        this.fornecedores = [];
+        this.init();
+      }
+      async init() {
+        await this.loadFornecedores();
+        await this.loadInsumos();
+        this.renderInsumos();
+        this.setupEventListeners();
+      }
+      setupEventListeners() {
+        document.getElementById('insumoForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await this.addInsumo();
+        });
+        document.getElementById('clearForm').addEventListener('click', () => {
+          this.clearForm();
+        });
+        document.getElementById('consultaPorIdForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('consultaId').value.trim();
+        if (!id || isNaN(parseInt(id))) {
+            this.showAlert('Informe um ID válido.', 'error');
+            return;
+        }
+        await this.buscarInsumoPorId(parseInt(id));
+        });
+
+        document.getElementById('limparBuscaPorId').addEventListener('click', () => {
+        document.getElementById('consultaId').value = '';
+        this.renderInsumos(); // Volta à lista completa
+        });
+      }
+      async loadFornecedores() {
+        try {
+          const resp = await fetch('https://localhost:5001/api/Fornecedor/Fornecedor/Consulta');
+          if (resp.ok) {
+            this.fornecedores = await resp.json();
+            this.populateFornecedorSelect();
+          } else {
+            this.fornecedores = [];
+            this.populateFornecedorSelect();
+          }
+        } catch {
+          this.fornecedores = [];
+          this.populateFornecedorSelect();
+        }
+      }
+      populateFornecedorSelect() {
+        const select = document.getElementById('id_fornecedor');
+        select.innerHTML = '<option value="">Selecione um fornecedor</option>';
+        if (Array.isArray(this.fornecedores)) {
+          this.fornecedores.forEach(f => {
+            select.innerHTML += `<option value="${f.id}">${f.nome}</option>`;
+          });
+        }
+      }
+      async buscarInsumoPorId(id) {
+        try {
+            const resp = await fetch(`https://localhost:5001/Insumos/Consulta/${id}`);
+            if (resp.ok) {
+            const insumo = await resp.json();
+            this.renderInsumos([insumo]); // renderiza como array
+            } else {
+            this.showAlert('Insumo não encontrado.', 'error');
+            }
+        } catch {
+            this.showAlert('Erro de conexão ao buscar insumo.', 'error');
+        }
+        }
+      async addInsumo() {
+        const form = document.getElementById('insumoForm');
+        const formData = new FormData(form);
+        const insumo = {
+          nome: formData.get('nome').trim(),
+          tipo: formData.get('tipo').trim(),
+          codigo: formData.get('codigo').trim(),
+          custo: parseFloat(formData.get('custo').replace(',', '.')),
+          id_fornecedor: parseInt(formData.get('id_fornecedor')),
+          qntd: parseInt(formData.get('qntd')) || 0
+        };
+        if (
+          !insumo.nome ||
+          !insumo.tipo ||
+          !insumo.codigo ||
+          isNaN(insumo.custo) ||
+          isNaN(insumo.id_fornecedor)
+        ) {
+          this.showAlert('Preencha todos os campos obrigatórios.', 'error');
+          return;
+        }
+        try {
+          const response = await fetch('https://localhost:5001/Insumos/Cadastro', {
+            method: 'POST',
+            headers: {},
+            body: formData
+          });
+          if (response.ok) {
+            this.showAlert(`Insumo "${insumo.nome}" registrado com sucesso!`, 'success');
+            await this.loadInsumos();
+            this.renderInsumos();
+            this.clearForm();
+          } else {
+            this.showAlert('Erro ao registrar insumo.', 'error');
+          }
+        } catch {
+          this.showAlert('Erro de conexão ao registrar insumo.', 'error');
+        }
+      }
+      async loadInsumos() {
+        try {
+          const resp = await fetch('https://localhost:5001/Insumos/Consulta');
+          if (resp.ok) {
+            this.insumos = await resp.json();
+          } else {
+            this.insumos = [];
+          }
+        } catch {
+          this.insumos = [];
+        }
+      }
+      renderInsumos(insumosToRender = null) {
+        const tbody = document.getElementById('insumoTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const insumos = insumosToRender || this.insumos;
+        if (!Array.isArray(insumos) || insumos.length === 0) {
+          tbody.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+        emptyState.classList.add('hidden');
+        tbody.innerHTML = insumos.map(insumo => {
+        const fornecedorId = insumo.id_fornecedor ?? insumo.id_Fornecedor;
+        const fornecedor = this.fornecedores.find(f => f.id === fornecedorId);
+          const fornecedorNome = fornecedor ? fornecedor.nome : 'N/A';
+          return `
+            <tr>
+              <td>${insumo.id || ''}</td>
+              <td><strong>${insumo.nome || ''}</strong></td>
+              <td>${insumo.tipo || ''}</td>
+              <td>${insumo.codigo || ''}</td>
+              <td>R$ ${insumo.custo ? Number(insumo.custo).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ''}</td>
+              <td>${insumo.qntd ?? 0}</td>
+              <td>${fornecedorNome}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+      clearForm() {
+        document.getElementById('insumoForm').reset();
+      }
+      showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
+        alertContainer.appendChild(alertDiv);
+        setTimeout(() => {
+          alertDiv.remove();
+        }, 5000);
+      }
+    }
+    // Inicializa o manager
+    const insumoManager = new InsumoManager();
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLOAD - Em Construção</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background-color: white; }
+    .nav-header { background-color: #3949ab; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .nav-container { display: flex; align-items: center; }
+    .logo { font-size: 24px; font-weight: bold; padding: 12px 0; margin-right: 32px; }
+    .nav-menu { display: flex; }
+    .nav-item { padding: 12px 16px; color: white; text-decoration: none; }
+    .nav-item:hover, .nav-item.active { background-color: #303f9f; }
+    .main-content { background-color: #005599; min-height: calc(100vh - 80px); padding: 20px; position: relative; }
+    .logo-container { position: absolute; top: 20px; right: 20px; text-align: right; }
+    .kload-logo { font-size: 48px; font-weight: bold; color: white; line-height: 1; }
+    .content-wrapper { max-width: 700px; margin: 0 auto; }
+    .page-title { color: white; font-size: 28px; font-weight: bold; margin-bottom: 30px; text-align: center; }
+    .section { background-color: #0066aa; border-radius: 8px; padding: 40px 24px; margin-bottom: 20px; color: white; text-align: center; }
+    .construction-icon { font-size: 64px; margin-bottom: 20px; }
+    .construction-text { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
+    .construction-desc { font-size: 16px; color: #ffe082; }
+    .footer { background-color: #005599; color: white; padding: 8px 16px; font-size: 12px; border-top: 1px solid #0066aa; }
+    .footer-content { display: flex; justify-content: space-between; align-items: center; }
+    .support-info { display: flex; gap: 16px; }
+    .status-bar { background-color: #005599; color: #e0e0e0; padding: 2px 8px; font-size: 11px; display: flex; gap: 16px; min-height: 22px; align-items: center; border-top: 1px solid #0066aa; }
+    @media (max-width: 768px) {
+      .nav-menu { display: none; }
+      .support-info { flex-direction: column; gap: 4px; }
+      .footer-content { flex-direction: column; gap: 8px; }
+      .content-wrapper { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <div class="container nav-container">
+      <div class="logo">KLOAD</div>
+      <div class="nav-menu" id="navMenu"></div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="logo-container">
+      <div class="kload-logo">KLOAD</div>
+    </div>
+    <div class="content-wrapper">
+      <h1 class="page-title">Página em Construção</h1>
+      <div class="section">
+        <div class="construction-icon">🚧</div>
+        <div class="construction-text">Esta página está em construção</div>
+        <div class="construction-desc">
+          Em breve você poderá acessar esta funcionalidade.<br>
+          Estamos trabalhando para entregar a melhor experiência para você!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-content">
+      <div class="support-info"></div>
+      <div>
+        <strong style="font-size:11px;color:#e0e0e0;background:#005599;padding:2px 8px;border-radius:3px;font-weight:normal;letter-spacing:0.5px;"> Versão 1.05.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar" id="statusBar">
+    <!-- Conteúdo será preenchido via JS -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Menu dinâmico
+      const menuItems = [
+        { label: 'Início', href: 'PaginaInicialPrincipal.html' },
+        { label: 'Movimento', href: 'On-hold.html' },
+        { label: 'Relatórios', href: 'On-hold.html' },
+        { label: 'Controle', href: 'On-hold.html' },
+        { label: 'Inteligência', href: 'On-hold.html' },
+        { label: 'Configurações', href: 'GerenciamentoUsuarios.html' },
+        { label: 'Utilitários', href: 'On-hold.html' },
+        { label: 'Sobre', href: 'On-hold.html' }
+      ];
+      const navMenu = document.getElementById('navMenu');
+      navMenu.innerHTML = '';
+      menuItems.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.className = 'nav-item';
+        if (window.location.pathname.endsWith(item.href)) a.classList.add('active');
+        a.textContent = item.label;
+        navMenu.appendChild(a);
+      });
+
+      const navContainer = document.querySelector('.nav-container');
+      // Botão de logout
+      const logoutButton = document.createElement('button');
+      logoutButton.textContent = '🚪 Sair';
+      logoutButton.style.background = '#3949ab';
+      logoutButton.style.color = 'white';
+      logoutButton.style.border = 'none';
+      logoutButton.style.padding = '8px 12px';
+      logoutButton.style.marginLeft = '16px';
+      logoutButton.style.borderRadius = '4px';
+      logoutButton.style.cursor = 'pointer';
+      logoutButton.style.fontWeight = 'bold';
+      logoutButton.style.fontSize = '12px';
+      logoutButton.onclick = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'TelaLogin.html';
+      };
+      navContainer.appendChild(logoutButton);
+
+      // Atualiza status bar com email e data
+      function updateStatusBar() {
+        const statusBar = document.getElementById('statusBar');
+        const userEmail = localStorage.getItem('userEmail') || '';
+        const now = new Date();
+        statusBar.innerHTML = `Data: ${now.toLocaleString('pt-BR')} | Usuário: ${userEmail} |`;
+      }
+      updateStatusBar();
+      setInterval(updateStatusBar, 1000);
+    });
+  </script>
+</body>
+</html>

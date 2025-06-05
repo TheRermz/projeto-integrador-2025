@@ -274,9 +274,7 @@
           
           <button type="submit" class="submit-button">Logar</button>
           
-          <div class="login-link">
-            Não possui sua conta? <a href="TelaRegistro.html">Registre-se</a>
-          </div>
+        
         </form>
       </div>
     </div>
@@ -300,6 +298,12 @@
   </div>
   
 <script>
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    window.location.href = 'login.html?loggedout=1';
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     // Toggle password visibility
     const togglePassword = document.getElementById('togglePassword');
@@ -341,7 +345,9 @@
         });
 
         if (response.ok) {
-          // Salva email no localStorage
+          const result = await response.json(); 
+
+          localStorage.setItem('token', result.token.result);
           localStorage.setItem('userEmail', data.email);
           window.location.href = 'PaginaInicialPrincipal.html';
         } else {

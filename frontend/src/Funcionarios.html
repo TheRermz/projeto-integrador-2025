@@ -52,7 +52,6 @@
     .footer { background-color: #005599; color: white; padding: 8px 16px; font-size: 12px; border-top: 1px solid #0066aa; }
     .footer-content { display: flex; justify-content: space-between; align-items: center; }
     .support-info { display: flex; gap: 16px; }
-    .status-bar { background-color: #004488; color: white; padding: 4px 8px; font-size: 11px; display: flex; gap: 16px; overflow-x: auto; white-space: nowrap; }
     .alert { padding: 12px; border-radius: 4px; margin-bottom: 20px; }
     .alert-success { background-color: #4caf50; color: white; }
     .alert-error { background-color: #f44336; color: white; }
@@ -76,20 +75,7 @@
   <div class="nav-header">
     <div class="container nav-container">
       <div class="logo">KLOAD</div>
-      <div class="nav-menu">
-        <a href="#" class="nav-item active">Cadastros</a>
-        <a href="#" class="nav-item">Movimento</a>
-        <a href="#" class="nav-item">Relatórios</a>
-        <a href="#" class="nav-item">Controle</a>
-        <a href="#" class="nav-item">Inteligência</a>
-        <a href="#" class="nav-item">Configurações</a>
-        <a href="#" class="nav-item">Utilitários</a>
-        <a href="#" class="nav-item">Sobre</a>
-      </div>
-      <div class="search-box">
-        <span>Pesquisar: </span>
-        <input type="text" class="search-input" id="searchInput" placeholder="Buscar funcionário...">
-      </div>
+      <div class="nav-menu" id="navMenu"></div>
     </div>
   </div>
   
@@ -142,19 +128,6 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="hierarquia" class="form-label">Hierarquia</label>
-              <select id="hierarquia" name="hierarquia" class="form-select" required>
-                <option value="">Selecione a hierarquia</option>
-                <option value="Diretor">Diretor</option>
-                <option value="Gerente">Gerente</option>
-                <option value="Supervisor">Supervisor</option>
-                <option value="Coordenador">Coordenador</option>
-                <option value="Analista">Analista</option>
-                <option value="Assistente">Assistente</option>
-                <option value="Operacional">Operacional</option>
-              </select>
-            </div>
-            <div class="form-group">
               <label for="status" class="form-label">Status</label>
                 <select id="status" name="status" class="form-select" required>
                   <option value="">Selecione o status</option>
@@ -165,14 +138,6 @@
             <div class="form-group">
               <label for="salario" class="form-label">Salário (R$)</label>
               <input type="number" id="salario" name="salario" class="form-input" placeholder="0,00" step="0.01" min="0" required>
-            </div>
-            <div class="form-group">
-              <label for="idMaquina" class="form-label">ID da Máquina</label>
-              <input type="text" id="idMaquina" name="id_Maquina" class="form-input" placeholder="Ex: PC001" required>
-            </div>
-            <div class="form-group">
-              <label for="senha" class="form-label">Senha</label>
-              <input type="password" id="senha" name="senha" class="form-input" placeholder="Digite a senha" required>
             </div>
           </div>
           <div class="form-row">
@@ -194,10 +159,8 @@
                 <th>Matrícula</th>
                 <th>Cargo</th>
                 <th>Setor</th>
-                <th>Hierarquia</th>
                 <th>Status</th>
                 <th>Salário</th>
-                <th>ID Máquina</th>
               </tr>
             </thead>
             <tbody id="funcionarioTableBody">
@@ -223,13 +186,61 @@
       </div>
     </div>
   </div>
-  
-  <!-- Status Bar -->
-  <div class="status-bar" id="statusBar">
-    <!-- Conteúdo será preenchido via JS -->
+
+  <div id="statusBar" style="position: fixed; bottom: 0; left: 0; right: 0; height: 24px; background-color: #3949ab; color: white; display: flex; align-items: center; padding: 0 16px; font-size: 12px;">
+    <!-- Texto da barra de status -->
   </div>
   
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Menu dinâmico
+      const menuItems = [
+        { label: 'Início', href: 'PaginaInicialPrincipal.html' },
+        { label: 'Movimento', href: 'On-hold.html' },
+        { label: 'Relatórios', href: 'On-hold.html' },
+        { label: 'Controle', href: 'On-hold.html' },
+        { label: 'Inteligência', href: 'On-hold.html' },
+        { label: 'Configurações', href: 'GerenciamentoUsuarios.html' },
+        { label: 'Utilitários', href: 'On-hold.html' },
+        { label: 'Sobre', href: 'On-hold.html' }
+      ];
+      const navMenu = document.getElementById('navMenu');
+      navMenu.innerHTML = '';
+      menuItems.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.className = 'nav-item';
+        if (window.location.pathname.endsWith(item.href)) a.classList.add('active');
+        a.textContent = item.label;
+        navMenu.appendChild(a);
+      });
+
+      const navContainer = document.querySelector('.nav-container'); // <-- ESSA LINHA É NECESSÁRIA!
+
+  // Criar botão de logout
+  const logoutButton = document.createElement('button');
+  logoutButton.textContent = '🚪 Sair';
+  logoutButton.style.background = '#3949ab'; 
+  logoutButton.style.color = 'white';
+  logoutButton.style.border = 'none';
+  logoutButton.style.padding = '8px 12px';
+  logoutButton.style.marginLeft = '16px';
+  logoutButton.style.borderRadius = '4px';
+  logoutButton.style.cursor = 'pointer';
+  logoutButton.style.fontWeight = 'bold';
+  logoutButton.style.fontSize = '12px';
+
+  // Ação de logout
+  logoutButton.onclick = function () {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    window.location.href = 'TelaLogin.html';
+  };
+
+  // Adicionar ao container de navegação
+  navContainer.appendChild(logoutButton);
+});
+
   class FuncionarioManager {
     constructor() {
       this.funcionarios = [];
@@ -246,9 +257,6 @@
       this.populateSetorSelect();
       this.renderFuncionarios();
       this.setupEventListeners();
-      this.updateDateTime();
-      this.updateStatusBar();
-      setInterval(() => this.updateStatusBar(), 1000);
     }
     setupEventListeners() {
       document.getElementById('funcionarioForm').addEventListener('submit', async (e) => {
@@ -257,9 +265,6 @@
       });
       document.getElementById('clearForm').addEventListener('click', () => {
         this.clearForm();
-      });
-      document.getElementById('searchInput').addEventListener('input', (e) => {
-        this.searchFuncionarios(e.target.value);
       });
     }
     populateCargoSelect() {
@@ -309,15 +314,21 @@
           matricula: formData.get('matricula').trim(),
           id_Cargo: parseInt(formData.get('id_Cargo')),
           id_Setor: parseInt(formData.get('id_Setor')),
-          hierarquia: formData.get('hierarquia'),
           status: parseInt(formData.get('status')),
-          salario: parseFloat(formData.get('salario')),
-          id_Maquina: formData.get('id_Maquina').trim(),
-          senha: formData.get('senha')
+          salario: parseFloat(formData.get('salario').replace(',', '.')),
+          id_Maquina: null,
+          hierarquia: null
         };
 
         // Validações básicas
-        if (!funcionario.nome || !funcionario.matricula || !funcionario.id_Cargo || !funcionario.id_Setor || !funcionario.hierarquia || !funcionario.status || !funcionario.salario || !funcionario.id_Maquina || !funcionario.senha) {
+        if (
+          !funcionario.nome ||
+          !funcionario.matricula ||
+          isNaN(funcionario.id_Cargo) ||
+          isNaN(funcionario.id_Setor) ||
+          funcionario.status === null || isNaN(funcionario.status) ||
+          isNaN(funcionario.salario)
+        ) {
           this.showAlert('Preencha todos os campos obrigatórios.', 'error');
           return;
         }
@@ -387,7 +398,7 @@
       
       async updateStats() {
         try {
-          const response = await fetch('https://localhost:5001/My/Funcionario/Funcionario/Consulta/Total');
+          const response = await fetch('https://localhost:5001/Mrp/Funcionario/Funcionario/Consulta/Total');
           if (response.ok) {
             const total = await response.json();
             document.getElementById('totalFuncionarios').textContent = total;
@@ -425,10 +436,8 @@
               <td>${funcionario.matricula}</td>
               <td>${cargoNome}</td>
               <td>${funcionario.id_Setor || funcionario.idSetor || ''}</td>
-              <td>${funcionario.hierarquia || ''}</td>
               <td><span class="${statusClass}">${statusText}</span></td>
               <td>R$ ${funcionario.salario ? Number(funcionario.salario).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ''}</td>
-              <td>${funcionario.id_Maquina || funcionario.idMaquina || ''}</td>
             </tr>
           `;
         }).join('');
@@ -441,8 +450,7 @@
         }
         const filteredFuncionarios = this.funcionarios.filter(funcionario =>
           (funcionario.nome && funcionario.nome.toLowerCase().includes(searchTerm.toLowerCase())) ||
-          (funcionario.matricula && funcionario.matricula.toLowerCase().includes(searchTerm.toLowerCase())) ||
-          (funcionario.id_Maquina && funcionario.id_Maquina.toLowerCase().includes(searchTerm.toLowerCase()))
+          (funcionario.matricula && funcionario.matricula.toLowerCase().includes(searchTerm.toLowerCase()))
         );
         this.renderFuncionarios(filteredFuncionarios);
       }
@@ -467,12 +475,6 @@
         document.getElementById('currentDate').textContent = now.toLocaleString('pt-BR');
       }
       
-      updateStatusBar() {
-        const statusBar = document.getElementById('statusBar');
-        const userEmail = localStorage.getItem('userEmail') || '';
-        const now = new Date();
-        statusBar.innerHTML = `Loja:  | Data: ${now.toLocaleString('pt-BR')} | Nome do Computador:  | IP:  | Usuário: ${userEmail} | Operador:  | Atendimento: `;
-      }
     }
     // Inicializa o manager
     const funcionarioManager = new FuncionarioManager();

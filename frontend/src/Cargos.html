@@ -73,20 +73,7 @@
   <div class="nav-header">
     <div class="container nav-container">
       <div class="logo">KLOAD</div>
-      <div class="nav-menu">
-        <a href="#" class="nav-item active">Cadastros</a>
-        <a href="#" class="nav-item">Movimento</a>
-        <a href="#" class="nav-item">Relatórios</a>
-        <a href="#" class="nav-item">Controle</a>
-        <a href="#" class="nav-item">Inteligência</a>
-        <a href="#" class="nav-item">Configurações</a>
-        <a href="#" class="nav-item">Utilitários</a>
-        <a href="#" class="nav-item">Sobre</a>
-      </div>
-      <div class="search-box">
-        <span>Pesquisar: </span>
-        <input type="text" class="search-input" id="searchInput" placeholder="Buscar cargo...">
-      </div>
+      <div class="nav-menu" id="navMenu"></div>
     </div>
   </div>
   
@@ -161,6 +148,55 @@
   </div>
   
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Menu dinâmico
+      const menuItems = [
+        { label: 'Início', href: 'PaginaInicialPrincipal.html' },
+        { label: 'Movimento', href: 'On-hold.html' },
+        { label: 'Relatórios', href: 'On-hold.html' },
+        { label: 'Controle', href: 'On-hold.html' },
+        { label: 'Inteligência', href: 'On-hold.html' },
+        { label: 'Configurações', href: 'GerenciamentoUsuarios.html' },
+        { label: 'Utilitários', href: 'On-hold.html' },
+        { label: 'Sobre', href: 'On-hold.html' }
+      ];
+      const navMenu = document.getElementById('navMenu');
+      navMenu.innerHTML = '';
+      menuItems.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.className = 'nav-item';
+        if (window.location.pathname.endsWith(item.href)) a.classList.add('active');
+        a.textContent = item.label;
+        navMenu.appendChild(a);
+      });
+
+      const navContainer = document.querySelector('.nav-container');
+
+      // Criar botão de logout
+      const logoutButton = document.createElement('button');
+      logoutButton.textContent = '🚪 Sair';
+      logoutButton.style.background = '#3949ab'; 
+      logoutButton.style.color = 'white';
+      logoutButton.style.border = 'none';
+      logoutButton.style.padding = '8px 12px';
+      logoutButton.style.marginLeft = '16px';
+      logoutButton.style.borderRadius = '4px';
+      logoutButton.style.cursor = 'pointer';
+      logoutButton.style.fontWeight = 'bold';
+      logoutButton.style.fontSize = '12px';
+
+      // Ação de logout
+      logoutButton.onclick = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'TelaLogin.html';
+      };
+
+      // Adicionar ao container de navegação
+      navContainer.appendChild(logoutButton);
+    });
+
     // Cargo management system
     class CargoManager {
       constructor() {
@@ -186,11 +222,6 @@
         // Clear form
         document.getElementById('clearForm').addEventListener('click', () => {
           this.clearForm();
-        });
-        
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-          this.searchCargos(e.target.value);
         });
       }
       
@@ -244,19 +275,6 @@
             </td>
           </tr>
         `).join('');
-      }
-      
-      searchCargos(searchTerm) {
-        if (!searchTerm.trim()) {
-          this.renderCargos();
-          return;
-        }
-        
-        const filteredCargos = this.cargos.filter(cargo =>
-          cargo.nome.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        
-        this.renderCargos(filteredCargos);
       }
       
       clearForm() {

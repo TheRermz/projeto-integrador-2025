@@ -75,20 +75,6 @@
       background-color: #303f9f;
     }
     
-    .search-box {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      color: white;
-    }
-    
-    .search-input {
-      border: 1px solid #ccc;
-      padding: 2px 4px;
-      font-size: 12px;
-      width: 150px;
-    }
-    
     .main-content {
       background-color: #005599;
       min-height: calc(100vh - 80px);
@@ -212,7 +198,7 @@
       navMenu.className = 'nav-menu';
       
       const menuItems = [
-        { label: 'Cadastros' },
+        { label: 'Início' },
         { label: 'Movimento' },
         { label: 'Relatórios' },
         { label: 'Controle' },
@@ -224,31 +210,44 @@
       
       menuItems.forEach(item => {
         const navItem = document.createElement('a');
-        navItem.href = '#';
+        navItem.href = 'PaginaInicialPrincipal.html';
         navItem.className = 'nav-item';
-        if (item.label === 'Cadastros') {
+        if (item.label === 'Início') {
           navItem.classList.add('active');
         }
+        if (item.label === 'Configurações') {
+          navItem.href = 'GerenciamentoUsuarios.html';
+        }
+        if (item.label === 'Movimento') {
+          navItem.href = 'On-hold.html';
+        }
+        if (item.label === 'Relatórios') {
+          navItem.href = 'On-hold.html';
+        }
+        if (item.label === 'Controle') {
+          navItem.href = 'On-hold.html';
+        }
+        if (item.label === 'Inteligência') {
+          navItem.href = 'On-hold.html';
+        }
+        if (item.label === 'Utilitários') {
+          navItem.href = 'On-hold.html';
+        }
+        if (item.label === 'Sobre') {
+          navItem.href = 'On-hold.html';
+        } 
+        
+        
+
         navItem.textContent = item.label;
         navMenu.appendChild(navItem);
       });
       
-      const searchBox = document.createElement('div');
-      searchBox.className = 'search-box';
+
       
-      const searchLabel = document.createElement('span');
-      searchLabel.textContent = 'Pesquisar: ';
-      
-      const searchInput = document.createElement('input');
-      searchInput.type = 'text';
-      searchInput.className = 'search-input';
-      
-      searchBox.appendChild(searchLabel);
-      searchBox.appendChild(searchInput);
       
       navContainer.appendChild(logo);
       navContainer.appendChild(navMenu);
-      navContainer.appendChild(searchBox);
       navHeader.appendChild(navContainer);
       
       // Create main content
@@ -270,12 +269,16 @@
       modulesGrid.className = 'modules-grid';
       
       const modules = [
-        { icon: '📦', label: 'Entrda de Produto/Insumos' },
+        { icon: '🧵', label: 'Entrda de Insumos' },
+        { icon: '🏷️', label: 'Entrda de Produtos' },
+        { icon: '🔄', label: 'Movimentação'},
+        { icon: '🧮', label: 'Calculo MRP' },
         { icon: '👔', label: 'Funcionários' },
         { icon: '🎚️', label: 'Maquinas' },
         { icon: '🧑‍💼', label: 'Cargos' },
-        { icon: '⬅️', label: 'Recebimento' },
-        { icon: '📦', label: 'Consulta Estoque' }
+        { icon: '🧍🏽', label: 'Fornecedor' },
+        { icon: '🗃️', label: 'Setor'},
+        { icon: '📚', label: 'Log de Movimentação'}
       ];
       
       modules.forEach(module => {
@@ -313,9 +316,51 @@
           });
         }
 
-        if (module.label === 'Entrda de Produto/Insumos') {
+        if (module.label === 'Entrda de Insumos') {
           moduleElement.addEventListener('click', () => {
-            window.location.href = 'entradaProdutosInsumos.html';
+            window.location.href = 'Insumos.html';
+          });
+        }
+
+        if (module.label === 'Fornecedor') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Fornecedor.html';
+          });
+        }
+
+        if (module.label === 'Usuários') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'GerenciamentoUsuarios.html';
+          });
+        }
+
+        if (module.label === 'Setor') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Setor.html';
+          });
+        }
+
+        if (module.label === 'Entrda de Produtos') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Produtos.html';
+          });
+        }
+
+        if (module.label === 'Log de Movimentação') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'logMovimentacoes.html';
+          });
+        }
+
+        if (module.label === 'Movimentação') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'Movimentacao.html';
+          });
+        }
+
+        if (module.label === 'Calculo MRP') {
+          moduleElement.addEventListener('click', () => {
+            window.location.href = 'calculomrp.html';
           });
         }
 
@@ -370,6 +415,30 @@
       app.appendChild(mainContent);
       app.appendChild(footer);
       app.appendChild(statusBar);
+
+      // Criar botão de logout
+      const logoutButton = document.createElement('button');
+      logoutButton.textContent = '🚪 Sair';
+      logoutButton.style.background = '#3949ab'; 
+      logoutButton.style.color = 'white';
+      logoutButton.style.border = 'none';
+      logoutButton.style.padding = '8px 12px';
+      logoutButton.style.marginLeft = '16px';
+      logoutButton.style.borderRadius = '4px';
+      logoutButton.style.cursor = 'pointer';
+      logoutButton.style.fontWeight = 'bold';
+      logoutButton.style.fontSize = '12px';
+
+      // Ação de logout
+      logoutButton.onclick = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'TelaLogin.html';
+      };
+
+      // Adicionar ao container de navegação
+      navContainer.appendChild(logoutButton);
+
     });
   </script>
 </body>

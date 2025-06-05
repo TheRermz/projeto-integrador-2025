@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KLOAD - Cálculo MRP</title>
+
+    <!-- Aproveite o CSS existente -->
+    <style>
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body {
+        background-color: #005599;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .logo {
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      .nav-link {
+        cursor: pointer;
+        color: white;
+      }
+
+      .nav-link:hover {
+        text-decoration: underline;
+        background-color: #303f9f;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-box input {
+        margin-left: 4px;
+        padding: 2px 8px;
+        height: 20px;
+        width: 96px;
+        font-size: 14px;
+      }
+
+      /* Main Content Styles */
+      .main {
+        flex: 1;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: #005599;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .page-title-container {
+        display: flex;
+        align-items: center;
+      }
+
+      .back-button {
+        margin-right: 8px;
+        padding: 4px;
+        background-color: #0066aa;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .back-button:hover {
+        background-color: #0077bb;
+      }
+
+      .page-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .page-logo {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      /* Content Layout */
+      .content-layout {
+        display: flex;
+        flex: 1;
+        gap: 16px;
+        overflow: hidden;
+      }
+
+      /* Form Container */
+      .form-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow-y: auto;
+        padding-right: 8px;
+      }
+
+      /* Form Section */
+      .form-section {
+        background-color: #003366;
+        border-radius: 4px;
+        border: 1px solid #0066aa;
+        overflow: hidden;
+      }
+
+      .section-header {
+        background-color: #3949ab;
+        padding: 8px 12px;
+        font-weight: bold;
+        border-bottom: 1px solid #0066aa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-content {
+        padding: 16px;
+      }
+
+      /* Form Styles */
+      .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .form-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+        color: #aaa;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #0066aa;
+        background-color: #001a33;
+        color: white;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #0077bb;
+        box-shadow: 0 0 0 2px rgba(0, 119, 187, 0.25);
+      }
+
+      .form-group input[type="date"] {
+        padding: 7px 8px;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-group.form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      /* Radio Button Group */
+      .radio-group {
+        display: flex;
+        gap: 16px;
+      }
+
+      .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .radio-option input[type="radio"] {
+        width: auto;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .btn-primary {
+        background-color: #0066aa;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #0077bb;
+      }
+
+      .btn-secondary {
+        background-color: #3949ab;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background-color: #303f9f;
+      }
+
+      .btn-danger {
+        background-color: #cc3333;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background-color: #dd4444;
+      }
+
+      /* Items Table */
+      .items-table-container {
+        overflow-x: auto;
+      }
+
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .items-table th {
+        background-color: #3949ab;
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #0066aa;
+      }
+
+      .items-table td {
+        padding: 8px;
+        border-bottom: 1px solid #0066aa;
+      }
+
+      .items-table tr:nth-child(even) {
+        background-color: #0066aa;
+      }
+
+      .items-table tr:hover {
+        background-color: #005599;
+      }
+
+      .items-table .text-right {
+        text-align: right;
+      }
+
+      .items-table .actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .items-table .action-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+      }
+
+      .items-table .action-btn:hover {
+        background-color: #0077bb;
+      }
+
+      .items-table .action-btn.delete:hover {
+        background-color: #cc3333;
+      }
+
+      /* Summary */
+      .summary {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 16px;
+        font-weight: bold;
+      }
+
+      .summary-table {
+        width: 300px;
+        border-collapse: collapse;
+      }
+
+      .summary-table td {
+        padding: 4px 8px;
+      }
+
+      .summary-table .text-right {
+        text-align: right;
+      }
+
+      .summary-table .total-row {
+        border-top: 1px solid #0066aa;
+        font-size: 18px;
+      }
+
+      /* Product Search */
+      .product-search-container {
+        position: relative;
+      }
+
+      .product-search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #001a33;
+        border: 1px solid #0066aa;
+        border-radius: 0 0 4px 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+      }
+
+      .product-search-item {
+        padding: 8px;
+        cursor: pointer;
+        border-bottom: 1px solid #0066aa;
+      }
+
+      .product-search-item:hover {
+        background-color: #0077bb;
+      }
+
+      .product-search-item .product-code {
+        font-size: 12px;
+        color: #aaa;
+      }
+
+      /* Preview Panel */
+      .preview-panel {
+        background-color: #003366;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: width 0.3s ease;
+        border: 1px solid #0066aa;
+      }
+
+      .preview-panel.open {
+        width: 400px;
+      }
+
+      .preview-header {
+        background-color: #3949ab;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #0066aa;
+      }
+
+      .preview-title {
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .preview-content {
+        padding: 16px;
+        overflow-y: auto;
+        max-height: calc(100vh - 200px);
+      }
+
+      .preview-section {
+        margin-bottom: 16px;
+      }
+
+      .preview-section-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #0066aa;
+        padding-bottom: 4px;
+      }
+
+      .preview-row {
+        display: flex;
+        margin-bottom: 8px;
+      }
+
+      .preview-label {
+        width: 120px;
+        color: #aaa;
+      }
+
+      .preview-value {
+        flex: 1;
+      }
+
+      .preview-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      /* Status Messages */
+      .status-message {
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .status-success {
+        background-color: rgba(102, 204, 102, 0.2);
+        border: 1px solid #66cc66;
+        color: #66cc66;
+      }
+
+      .status-error {
+        background-color: rgba(204, 51, 51, 0.2);
+        border: 1px solid #cc3333;
+        color: #cc3333;
+      }
+
+      .status-warning {
+        background-color: rgba(255, 204, 0, 0.2);
+        border: 1px solid #ffcc00;
+        color: #ffcc00;
+      }
+
+      /* Footer Styles */
+      .footer {
+        background-color: #005599;
+        padding: 4px 16px;
+        font-size: 12px;
+        border-top: 1px solid #0066aa;
+      }
+
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .footer-info {
+        display: flex;
+        gap: 16px;
+      }
+
+      .footer-info-item b {
+        font-weight: bold;
+      }
+
+      .footer-version {
+        display: flex;
+        gap: 16px;
+      }
+
+      .system-info {
+        text-align: right;
+      }
+
+      .footer-links {
+        margin-top: 4px;
+        display: flex;
+        gap: 8px;
+      }
+
+      .footer-link {
+        cursor: pointer;
+      }
+
+      .footer-link:hover {
+        text-decoration: underline;
+      }
+
+      .separator {
+        color: #666;
+      }
+
+      /* Icons */
+      .icon {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+      }
+
+      .icon-arrow-left::before {
+        content: "←";
+      }
+
+      .icon-plus::before {
+        content: "+";
+      }
+
+      .icon-edit::before {
+        content: "✎";
+      }
+
+      .icon-trash::before {
+        content: "🗑️";
+        font-size: 12px;
+      }
+
+      .icon-check::before {
+        content: "✓";
+      }
+
+      .icon-close::before {
+        content: "×";
+      }
+
+      .icon-save::before {
+        content: "💾";
+        font-size: 12px;
+      }
+
+      .icon-preview::before {
+        content: "👁️";
+        font-size: 12px;
+      }
+
+      .icon-warning::before {
+        content: "⚠️";
+        font-size: 12px;
+      }
+
+      .icon-success::before {
+        content: "✅";
+        font-size: 12px;
+      }
+
+      .icon-error::before {
+        content: "❌";
+        font-size: 12px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .content-layout {
+          flex-direction: column;
+        }
+
+        .preview-panel {
+          width: 100%;
+          height: 0;
+          transition: height 0.3s ease;
+        }
+
+        .preview-panel.open {
+          width: 100%;
+          height: 500px;
+        }
+
+        .form-row {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .form-group {
+          min-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main">
+      <div class="page-header">
+        <div class="page-title-container">
+          <button class="back-button" onclick="window.history.back()">
+            <span class="icon icon-arrow-left"></span>
+          </button>
+          <h1 class="page-title">Cálculo MRP</h1>
+        </div>
+        <div class="page-logo">KLOAD</div>
+      </div>
+      <div class="content-layout">
+        <div class="form-container">
+          <form id="mrp-form">
+            <div class="form-section">
+              <div class="section-header">Produto Final</div>
+              <div class="section-content">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="produtoFinal-nomeProduto"
+                      >Nome do Produto</label
+                    >
+                    <input type="text" id="produtoFinal-nomeProduto" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="produtoFinal-qntdProduzida"
+                      >Qtd. Produzida</label
+                    >
+                    <input
+                      type="number"
+                      id="produtoFinal-qntdProduzida"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="produtoFinal-dataEntrega"
+                      >Data de Entrega</label
+                    >
+                    <input type="date" id="produtoFinal-dataEntrega" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">Lista de Materiais</div>
+              <div class="section-content" id="listaMateriais-section">
+                <!-- Campos dinâmicos para listaMateriais -->
+                <div class="form-row material-row">
+                  <div class="form-group">
+                    <label>Nome do Componente</label>
+                    <input
+                      type="text"
+                      class="listaMateriais-nomeComponente"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Qtd. Unidade</label>
+                    <input
+                      type="number"
+                      class="listaMateriais-qntdUnidade"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group form-actions">
+                    <button
+                      type="button"
+                      class="btn btn-secondary add-material-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">Estoque Atual</div>
+              <div class="section-content" id="estoqueAtual-section">
+                <div class="form-row estoque-row">
+                  <div class="form-group">
+                    <label>Nome do Produto</label>
+                    <input
+                      type="text"
+                      class="estoqueAtual-nomeProduto"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Qtd. Disponível</label>
+                    <input
+                      type="number"
+                      data-qtd="estoqueAtual-qntdDisponivel"
+                      class="estoqueAtual-qntdDisponivel"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group form-actions">
+                    <button
+                      type="button"
+                      class="btn btn-secondary add-estoque-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">Pedidos Abertos</div>
+              <div class="section-content" id="pedidosAbertos-section">
+                <div class="form-row pedido-row">
+                  <div class="form-group">
+                    <label>Nome do Item</label>
+                    <input
+                      type="text"
+                      class="pedidosAbertos-nomeItem"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Qtd. Pedida</label>
+                    <input
+                      type="number"
+                      class="pedidosAbertos-qntdPedida"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Data de Entrega</label>
+                    <input
+                      type="date"
+                      class="pedidosAbertos-dataEntrega"
+                      required
+                    />
+                  </div>
+                  <div class="form-group form-actions">
+                    <button
+                      type="button"
+                      class="btn btn-secondary add-pedido-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">Lead Times</div>
+              <div class="section-content" id="leadTimes-section">
+                <div class="form-row leadtime-row">
+                  <div class="form-group">
+                    <label>Nome do Item</label>
+                    <input type="text" class="leadTimes-nomeItem" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Tempo de Reposição</label>
+                    <input
+                      type="number"
+                      class="leadTimes-tempoReposicao"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group form-actions">
+                    <button
+                      type="button"
+                      class="btn btn-secondary add-leadtime-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">Recursos de Produção</div>
+              <div class="section-content" id="recursosProducao-section">
+                <div class="form-row recurso-row">
+                  <div class="form-group">
+                    <label>Nome da Operação</label>
+                    <input
+                      type="text"
+                      class="recursosProducao-nomeOperacao"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Tempo por Unidade (min)</label>
+                    <input
+                      type="number"
+                      class="recursosProducao-tempoPorUnidadeMin"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Recursos Disponíveis</label>
+                    <input
+                      type="number"
+                      class="recursosProducao-recursosDisponiveis"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Horas por Dia</label>
+                    <input
+                      type="number"
+                      class="recursosProducao-horasPorDia"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group form-actions">
+                    <button
+                      type="button"
+                      class="btn btn-secondary add-recurso-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-content">
+                <div class="form-row">
+                  <div class="form-group form-actions">
+                    <button type="submit" class="btn btn-primary">
+                      Calcular MRP
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div id="resultado-mrp"></div>
+        </div>
+      </div>
+    </main>
+    <script>
+      const API_URL = "https://localhost:5001";
+
+      // Funções para adicionar/remover linhas dinâmicas
+      function addRow(sectionId, rowClass) {
+        const section = document.getElementById(sectionId);
+        const rows = section.querySelectorAll(`.${rowClass}`);
+        const lastRow = rows[rows.length - 1];
+        const newRow = lastRow.cloneNode(true);
+
+        // Limpa os valores dos inputs clonados
+        newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
+
+        // Adiciona botão de remover se ainda não existir
+        let removeBtn = newRow.querySelector(".remove-btn");
+        if (!removeBtn) {
+          removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.className = "btn btn-danger remove-btn";
+          removeBtn.textContent = "-";
+          removeBtn.onclick = function () {
+            if (section.querySelectorAll(`.${rowClass}`).length > 1) {
+              newRow.remove();
+            }
+          };
+          newRow.querySelector(".form-actions").appendChild(removeBtn);
+        }
+
+        section.appendChild(newRow);
+      }
+
+      // Adiciona eventos aos botões de adicionar linha
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector(".add-material-btn").onclick = () =>
+          addRow("listaMateriais-section", "material-row");
+        document.querySelector(".add-estoque-btn").onclick = () =>
+          addRow("estoqueAtual-section", "estoque-row");
+        document.querySelector(".add-pedido-btn").onclick = () =>
+          addRow("pedidosAbertos-section", "pedido-row");
+        document.querySelector(".add-leadtime-btn").onclick = () =>
+          addRow("leadTimes-section", "leadtime-row");
+        document.querySelector(".add-recurso-btn").onclick = () =>
+          addRow("recursosProducao-section", "recurso-row");
+      });
+
+      // Função para coletar dados do formulário dinâmico
+      function collectRows(sectionId, rowClass, fields) {
+        const section = document.getElementById(sectionId);
+        const rows = section.querySelectorAll(`.${rowClass}`);
+        return Array.from(rows).map((row) => {
+          const obj = {};
+          fields.forEach((f) => {
+            const input = row.querySelector(f.selector);
+            obj[f.name] =
+              input.type === "number" ? Number(input.value) : input.value;
+          });
+          return obj;
+        });
+      }
+
+      // Monta o JSON e envia para o endpoint
+      document
+        .getElementById("mrp-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          // Produto Final
+          const produtoFinal = {
+            nomeProduto: document.getElementById("produtoFinal-nomeProduto")
+              .value,
+            qntdProduzida: Number(
+              document.getElementById("produtoFinal-qntdProduzida").value
+            ),
+            dataEntrega: document.getElementById("produtoFinal-dataEntrega")
+              .value,
+          };
+
+          // Lista de Materiais
+          const listaMateriais = collectRows(
+            "listaMateriais-section",
+            "material-row",
+            [
+              {
+                name: "nomeComponente",
+                selector: ".listaMateriais-nomeComponente",
+              },
+              { name: "qntdUnidade", selector: ".listaMateriais-qntdUnidade" },
+            ]
+          );
+
+          // Estoque Atual
+          const estoqueAtual = collectRows(
+            "estoqueAtual-section",
+            "estoque-row",
+            [
+              { name: "nomeProduto", selector: ".estoqueAtual-nomeProduto" },
+              {
+                name: "qntdDisponivel",
+                selector: ".estoqueAtual-qntdDisponivel",
+              },
+            ]
+          );
+
+          // Pedidos Abertos
+          const pedidosAbertos = collectRows(
+            "pedidosAbertos-section",
+            "pedido-row",
+            [
+              { name: "nomeItem", selector: ".pedidosAbertos-nomeItem" },
+              { name: "qntdPedida", selector: ".pedidosAbertos-qntdPedida" },
+              { name: "dataEntrega", selector: ".pedidosAbertos-dataEntrega" },
+            ]
+          );
+
+          // Lead Times
+          const leadTimes = collectRows("leadTimes-section", "leadtime-row", [
+            { name: "nomeItem", selector: ".leadTimes-nomeItem" },
+            { name: "tempoReposicao", selector: ".leadTimes-tempoReposicao" },
+          ]);
+
+          // Recursos de Produção
+          const recursosProducao = collectRows(
+            "recursosProducao-section",
+            "recurso-row",
+            [
+              {
+                name: "nomeOperacao",
+                selector: ".recursosProducao-nomeOperacao",
+              },
+              {
+                name: "tempoPorUnidadeMin",
+                selector: ".recursosProducao-tempoPorUnidadeMin",
+              },
+              {
+                name: "recursosDisponiveis",
+                selector: ".recursosProducao-recursosDisponiveis",
+              },
+              {
+                name: "horasPorDia",
+                selector: ".recursosProducao-horasPorDia",
+              },
+            ]
+          );
+
+          // Monta o payload
+          const payload = {
+            produtoFinal,
+            listaMateriais,
+            estoqueAtual,
+            pedidosAbertos,
+            leadTimes,
+            recursosProducao,
+          };
+
+          // Envia para a API
+          const resultadoDiv = document.getElementById("resultado-mrp");
+          resultadoDiv.innerHTML = "Calculando...";
+          try {
+            const resp = await fetch(`${API_URL}/MRP/Calcular`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            if (!resp.ok) throw new Error("Erro ao calcular MRP");
+            const data = await resp.json();
+            resultadoDiv.innerHTML = `<pre>${JSON.stringify(
+              data,
+              null,
+              2
+            )}</pre>`;
+
+            // Card de sucesso
+            let html = `
+  <div class="status-message status-success">
+    <span class="icon icon-success"></span>
+    ${data.sucesso || "Cálculo do MRP realizado com sucesso."}
+  </div>
+`;
+
+            // Tabela de ordens planejadas
+            if (
+              Array.isArray(data.ordensPlanejadas) &&
+              data.ordensPlanejadas.length > 0
+            ) {
+              html += `
+    <table class="items-table" style="margin-top:16px;">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Necessidade Bruta</th>
+          <th>Estoque Disponível</th>
+          <th>Pedidos em Aberto</th>
+          <th>Necessidade Líquida</th>
+          <th>Data Pedido</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.ordensPlanejadas
+          .map(
+            (ordem) => `
+          <tr>
+            <td>${ordem.nomeItem}</td>
+            <td>${ordem.necessidadeBruta}</td>
+            <td>${ordem.estoqueDisponivel}</td>
+            <td>${ordem.pedidosEmAberto}</td>
+            <td>${ordem.necessidadeLiquida}</td>
+            <td>${ordem.dataPedido}</td>
+          </tr>
+        `
+          )
+          .join("")}
+      </tbody>
+    </table>
+  `;
+            }
+
+            resultadoDiv.innerHTML = html;
+          } catch (err) {
+            resultadoDiv.innerHTML = `<div class="status-message status-error"><span class="icon icon-error"></span>Erro ao calcular MRP: ${err.message}</div>`;
+          }
+        });
+
+      // Função para buscar produtos da API
+      async function buscarProdutos(filtro) {
+        if (!filtro || filtro.length < 2) return [];
+        const resp = await fetch(`${API_URL}/Produtos/Consulta`);
+        if (!resp.ok) return [];
+        const produtos = await resp.json();
+        return produtos.filter(
+          (p) => p.nome && p.nome.toLowerCase().includes(filtro.toLowerCase())
+        );
+      }
+
+      // Cria o autocomplete
+      function setupAutocompleteProduto() {
+        const input = document.getElementById("produtoFinal-nomeProduto");
+        let resultsBox = document.createElement("div");
+        resultsBox.className = "product-search-results";
+        resultsBox.style.position = "absolute";
+        resultsBox.style.zIndex = "1000";
+        input.parentNode.style.position = "relative";
+        input.parentNode.appendChild(resultsBox);
+
+        input.addEventListener("input", async function () {
+          const termo = input.value;
+          if (termo.length < 2) {
+            resultsBox.innerHTML = "";
+            resultsBox.style.display = "none";
+            return;
+          }
+          const produtos = await buscarProdutos(termo);
+          if (produtos.length === 0) {
+            resultsBox.innerHTML =
+              "<div class='product-search-item'>Nenhum produto encontrado</div>";
+            resultsBox.style.display = "block";
+            return;
+          }
+          resultsBox.innerHTML = produtos
+            .map(
+              (p) =>
+                `<div class="product-search-item" data-nome="${p.nome}">${p.nome}</div>`
+            )
+            .join("");
+          resultsBox.style.display = "block";
+          // Clique em uma sugestão
+          resultsBox
+            .querySelectorAll(".product-search-item")
+            .forEach((item) => {
+              item.onclick = function () {
+                input.value = item.getAttribute("data-nome");
+                resultsBox.innerHTML = "";
+                resultsBox.style.display = "none";
+              };
+            });
+        });
+
+        // Esconde o autocomplete ao perder o foco
+        input.addEventListener("blur", function () {
+          setTimeout(() => {
+            resultsBox.innerHTML = "";
+            resultsBox.style.display = "none";
+          }, 200);
+        });
+      }
+
+      async function buscarInsumos(filtro) {
+        if (!filtro || filtro.length < 2) return [];
+        const resp = await fetch(`${API_URL}/Insumos/Consulta`);
+        if (!resp.ok) return [];
+        const insumos = await resp.json();
+        return insumos.filter(
+          (i) => i.nome && i.nome.toLowerCase().includes(filtro.toLowerCase())
+        );
+      }
+
+      function setupAutocompleteInsumo(inputSelector) {
+        document.addEventListener("input", async function (e) {
+          if (!e.target.matches(inputSelector)) return;
+          const input = e.target;
+          let resultsBox = input.parentNode.querySelector(
+            ".insumo-search-results"
+          );
+          if (!resultsBox) {
+            resultsBox = document.createElement("div");
+            resultsBox.className = "insumo-search-results";
+            resultsBox.style.position = "absolute";
+            resultsBox.style.zIndex = "1000";
+            input.parentNode.style.position = "relative";
+            input.parentNode.appendChild(resultsBox);
+          }
+          const termo = input.value;
+          if (termo.length < 2) {
+            resultsBox.innerHTML = "";
+            resultsBox.style.display = "none";
+            return;
+          }
+          const insumos = await buscarInsumos(termo);
+          if (insumos.length === 0) {
+            resultsBox.innerHTML =
+              "<div class='product-search-item'>Nenhum insumo encontrado</div>";
+            resultsBox.style.display = "block";
+            return;
+          }
+          resultsBox.innerHTML = insumos
+            .map(
+              (i) =>
+                `<div class="product-search-item" data-nome="${
+                  i.nome
+                }" data-qtd="${i.qtdDisponivel ?? ""}">${
+                  i.nome
+                } <span class="product-code">(${i.codigo})</span></div>`
+            )
+            .join("");
+          resultsBox.style.display = "block";
+          resultsBox
+            .querySelectorAll(".product-search-item")
+            .forEach((item) => {
+              item.onclick = function () {
+                input.value = item.getAttribute("data-nome");
+                resultsBox.innerHTML = "";
+                resultsBox.style.display = "none";
+                // Preencher qtd disponível se for campo de estoque
+                if (input.classList.contains("estoqueAtual-nomeProduto")) {
+                  const row = input.closest(".estoque-row");
+                  const qtdInput = row.querySelector(
+                    ".estoqueAtual-qntdDisponivel"
+                  );
+                  if (qtdInput && item.hasAttribute("data-qtd")) {
+                    qtdInput.value = item.getAttribute("data-qtd") || "";
+                    qtdInput.dispatchEvent(
+                      new Event("input", { bubbles: true })
+                    );
+                  }
+                }
+              };
+            });
+        });
+
+        // Esconde o autocomplete ao perder o foco
+        document.addEventListener(
+          "blur",
+          function (e) {
+            if (!e.target.matches(inputSelector)) return;
+            const resultsBox = e.target.parentNode.querySelector(
+              ".insumo-search-results"
+            );
+            if (resultsBox) {
+              setTimeout(() => {
+                resultsBox.innerHTML = "";
+                resultsBox.style.display = "none";
+              }, 200);
+            }
+          },
+          true
+        );
+      }
+
+      // Inicializa o autocomplete ao carregar a página
+      document.addEventListener("DOMContentLoaded", function () {
+        setupAutocompleteInsumo(".listaMateriais-nomeComponente");
+        setupAutocompleteInsumo(".estoqueAtual-nomeProduto");
+      });
+    </script>
+  </body>
+</html>
